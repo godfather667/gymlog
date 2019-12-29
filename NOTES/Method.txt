@@ -1,0 +1,91 @@
+Calling functions and Methods from another package
+
+Remote package types and vars: 
+===============================
+type Dtype struct {    // With Struct
+	Dt int
+}
+
+type MyDt int		   // With primative type
+
+const (                // Constant ID
+	INIT = iota
+	DATA
+	PAGE
+	LIST
+)
+
+var initFile string = "gymlog.ini"
+
+Remote Package:  Two Methods and one Function:
+==============================
+
+func (d MyDt) MyName() string {   // primitive 
+	if d == INIT {
+		return initFile
+	}
+	return "Unknown File"
+}
+
+func (d Dtype) Name() string {    // Structure
+	if d.Dt == INIT {
+		return initFile
+	}
+	return "Unknown File"
+}
+
+func FileName(d Ftype) string {    // Function
+	switch d {
+	case INIT:
+		return initFile
+	case DATA:
+		return dataFile
+	case PAGE:
+		return pageFile
+	case LIST:
+		return listFile
+	default:
+		fmt.Println("Error: Filetype Unknown: Allowed: DATA, PAGE, LIST")
+		return ""
+	}
+}
+
+
+Calling Methods and Functions from main package:
+====================================================
+//
+// Type Definitions
+//
+type FileType int
+type FileName string
+
+//
+// Constants
+const (
+	INIT = iota // File Specifers
+	DATA
+	PAGE
+	LIST
+)
+
+type Dtype struct {
+	Dt int
+}
+
+type MyDt int
+
+
+Calling methods and Functions
+=====================================
+
+// Creating Receivers for methods
+
+	t := dataStore.Dtype{Dt: INIT}  // Struct Type
+	x := dataStore.MyDt(INIT)       // Primitive Type
+
+
+	fmt.Println("Filename = ", dataStore.FileName(INIT))
+
+	fmt.Println("Filename = ", t.Name())
+
+	fmt.Println("Filename = ", x.MyName())
