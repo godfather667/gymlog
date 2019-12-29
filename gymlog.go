@@ -59,24 +59,13 @@ func main() {
 	displayDate()
 
 	// TEST FileOps:
-	t := dataStore.MyDt(INIT)
-	fmt.Println("Filename = ", t.SetName("newInit"))
+	fmt.Println("Filename = ", dataStore.SetName(INIT, "newInit"))
+	fmt.Println("Filename = ", dataStore.SetName(DATA, "newDataFile.txt"))
 
-	t = dataStore.MyDt(DATA)
-	fmt.Println("Filename = ", t.SetName("newDataFile.txt"))
-
-	t = dataStore.MyDt(INIT)
-	fmt.Println("Filename = ", t.Name())
-
-	t = dataStore.MyDt(DATA)
-	fmt.Println("Filename = ", t.Name())
-
-	t = dataStore.MyDt(PAGE)
-	fmt.Println("Filename = ", t.Name())
-
-	t = dataStore.MyDt(LIST)
-	fmt.Println("Filename = ", t.Name())
-
+	fmt.Println("Filename = ", dataStore.Name(INIT))
+	fmt.Println("Filename = ", dataStore.Name(DATA))
+	fmt.Println("Filename = ", dataStore.Name(PAGE))
+	fmt.Println("Filename = ", dataStore.Name(LIST))
 	fmt.Println("")
 	//
 	// CLI Front End

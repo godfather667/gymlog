@@ -31,7 +31,24 @@ var dataFile string = "dataFile"
 var pageFile string = "pageFile.txt"
 var listFile string = "listFile.txt"
 
-func (d MyDt) Name() string {
+/*func (d MyDt) Name() string {
+	switch d {
+	case INIT:
+		return initFile
+	case DATA:
+		return dataFile
+	case PAGE:
+		return pageFile
+	case LIST:
+		return listFile
+	default:
+		fmt.Println("Error: Filetype Unknown: Allowed: INIT, DATA, PAGE, LIST")
+		return ""
+	}
+}
+*/
+
+func Name(d MyDt) string {
 	switch d {
 	case INIT:
 		return initFile
@@ -47,7 +64,7 @@ func (d MyDt) Name() string {
 	}
 }
 
-func (d MyDt) SetName(n string) bool {
+func SetName(d MyDt, n string) bool {
 	switch d {
 	case INIT:
 		fmt.Println("Error: Init Filename can not be changed!")
