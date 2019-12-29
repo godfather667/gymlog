@@ -42,7 +42,27 @@ func (d MyDt) Name() string {
 	case LIST:
 		return listFile
 	default:
-		fmt.Println("Error: Filetype Unknown: Allowed: DATA, PAGE, LIST")
+		fmt.Println("Error: Filetype Unknown: Allowed: INIT, DATA, PAGE, LIST")
 		return ""
+	}
+}
+
+func (d MyDt) SetName(n string) bool {
+	switch d {
+	case INIT:
+		fmt.Println("Error: Init Filename can not be changed!")
+		return false
+	case DATA:
+		dataFile = n
+		return true
+	case PAGE:
+		pageFile = n
+		return true
+	case LIST:
+		listFile = n
+		return true
+	default:
+		fmt.Println("Error: Filetype Unknown: Allowed: DATA, PAGE, LIST")
+		return false
 	}
 }

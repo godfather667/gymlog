@@ -58,22 +58,25 @@ func main() {
 	// Display Current Date
 	displayDate()
 
-	//	fmt.Println("Console Input = ", fileOps.Console("Input: "))
-	/*
-		fmt.Println("Filename = ", dataStore.FileName(INIT))
-		fmt.Println("Filename = ", dataStore.FileName(DATA))
-		fmt.Println("Filename = ", dataStore.FileName(PAGE))
-		fmt.Println("Filename = ", dataStore.FileName(LIST))
-	*/
-
+	// TEST FileOps:
 	t := dataStore.MyDt(INIT)
+	fmt.Println("Filename = ", t.SetName("newInit"))
+
+	t = dataStore.MyDt(DATA)
+	fmt.Println("Filename = ", t.SetName("newDataFile.txt"))
+
+	t = dataStore.MyDt(INIT)
 	fmt.Println("Filename = ", t.Name())
+
 	t = dataStore.MyDt(DATA)
 	fmt.Println("Filename = ", t.Name())
+
 	t = dataStore.MyDt(PAGE)
 	fmt.Println("Filename = ", t.Name())
+
 	t = dataStore.MyDt(LIST)
 	fmt.Println("Filename = ", t.Name())
+
 	fmt.Println("")
 	//
 	// CLI Front End
