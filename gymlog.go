@@ -67,6 +67,25 @@ func main() {
 	fmt.Println("Filename = ", dataStore.Name(PAGE))
 	fmt.Println("Filename = ", dataStore.Name(LIST))
 	fmt.Println("")
+
+	tst1 := []string{"FW Curl", "4", "10", "20"}
+	tst2 := []string{"Leg Press", "4", "10", "220"}
+	tst3 := []string{"LAT", "4", "10", "90"}
+
+	dataStore.InitStore()
+	dataStore.SetEntry("FWC", tst1)
+	dataStore.SetEntry("LP", tst2)
+	dataStore.SetEntry("LAT", tst3)
+
+	fmt.Println("Entry = ", dataStore.Entry("FWC"))
+	fmt.Println("Entry = ", dataStore.Entry("LP"))
+	fmt.Println("Entry = ", dataStore.Entry("LAT"))
+
+	fmt.Println("Codes = ", dataStore.Codes())
+	dataStore.RemoveEntry("LP")
+	fmt.Println("Codes = ", dataStore.Codes())
+
+	fmt.Println("\n-------- END OF TEST FUNCTIONS ------------\n")
 	//
 	// CLI Front End
 	//
