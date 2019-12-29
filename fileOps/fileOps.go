@@ -4,7 +4,10 @@ import (
 	"bufio"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"log"
 	"os"
+	"strings"
 )
 
 //
@@ -12,7 +15,7 @@ import (
 //
 func check(e error) {
 	if e != nil {
-		panic(e)
+		log.Fatal(e)
 	}
 }
 
@@ -28,6 +31,23 @@ func Console(line string) (response string) {
 	response, err := reader.ReadString('\n')
 	check(err)
 	return
+}
+
+func ReadFile(file string) []string {
+	content, err := ioutil.ReadFile(file)
+	check(err)
+	//	text := string(content)
+	return strings.Split(string(content), "\n")
+}
+
+func WriteFile(file string, data []string) {
+	content := ""
+	for _, v := range data {
+		content += v + "\n"
+	}
+	bc := []byte(content)
+	err := ioutil.WriteFile(file, bc, 0644)
+	check(err)
 }
 
 //
@@ -59,44 +79,7 @@ func FromJson(v []byte, vv interface{}) {
 
 /*
 
-func readInit() (sin stringItem) {
-	sin = make(stringItem, 0)
-	file, err := os.Open(initFile)
-	if err != nil {
-		fmt.Println("File Open Err: ", err)
-	}
-	defer file.Close()
 
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		line := scanner.Text()
-		if strings.HasPrefix(line, "INIT ") {
-			initFile = strings.TrimLeft(line, "INIT ")
-			continue
-		}
-		if strings.HasPrefix(line, "PAGE ") {
-			pageFile = strings.TrimLeft(line, "PAGE ")
-			continue
-		}
-		if strings.HasPrefix(line, "DBASE ") {
-			dataFile = strings.TrimLeft(line, "DBASE ")
-			continue
-		}
-		if strings.HasPrefix(line, "LIST ") {
-			listFile = strings.TrimLeft(line, "LIST ")
-			continue
-		}
-		comment := strings.HasPrefix(line, "#") || strings.HasPrefix(line, " #")
-		if !comment && len(line) > 2 {
-			sin = append(sin, line)
-		}
-		if err := scanner.Err(); err != nil {
-			panic(err)
-		}
-		fmt.Println("SIN: ", sin)
-	}
-	return sin
-}
 func readData() []string {
 	data := make([]string, 0)
 	file, err := os.Open(dataFile)

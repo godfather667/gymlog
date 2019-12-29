@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"gym_project/gymlog/dataStore"
-	_ "gym_project/gymlog/fileOps"
+	"gym_project/gymlog/fileOps"
 
 	"github.com/urfave/cli"
 )
@@ -82,8 +82,20 @@ func main() {
 	fmt.Println("Entry = ", dataStore.Entry("LAT"))
 
 	fmt.Println("Codes = ", dataStore.Codes())
-	dataStore.RemoveEntry("LP")
+	dataStore.RemEntry("LP")
 	fmt.Println("Codes = ", dataStore.Codes())
+
+	dataStore.SetEntry("LP", tst2)
+	codes := dataStore.Codes()
+	fileOps.WriteFile("test.bin", codes)
+	retTest := fileOps.ReadFile("test.bin")
+	fmt.Println("RetTest = ", retTest)
+
+	fmt.Println("\n---------- INIT FILE DATA -------------------")
+	//	fmt.Println("INI = ", fileOps.ReadFile(dataStore.Name(INIT)))
+
+	elst := dataStore.LoadInit()
+	fmt.Println("INI = \n", elst)
 
 	fmt.Println("\n-------- END OF TEST FUNCTIONS ------------\n")
 	//

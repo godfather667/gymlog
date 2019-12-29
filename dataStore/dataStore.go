@@ -2,10 +2,13 @@ package dataStore
 
 import (
 	"fmt"
+	"gym_project/gymlog/fileOps"
+	"strings"
 )
 
 type Ftype int
 type Fname string
+type entryList []string
 
 type MyDt int
 
@@ -27,23 +30,6 @@ var initFile string = "gymlog.ini"
 var dataFile string = "dataFile"
 var pageFile string = "pageFile.txt"
 var listFile string = "listFile.txt"
-
-/*func (d MyDt) Name() string {
-	switch d {
-	case INIT:
-		return initFile
-	case DATA:
-		return dataFile
-	case PAGE:
-		return pageFile
-	case LIST:
-		return listFile
-	default:
-		fmt.Println("Error: Filetype Unknown: Allowed: INIT, DATA, PAGE, LIST")
-		return ""
-	}
-}
-*/
 
 func Name(d MyDt) string {
 	switch d {
@@ -94,7 +80,7 @@ func Entry(code string) []string {
 	return Store[code]
 }
 
-func RemoveEntry(code string) {
+func RemEntry(code string) {
 	delete(Store, code)
 }
 
@@ -105,3 +91,59 @@ func Codes() []string {
 	}
 	return CodeList
 }
+
+func LoadInit() (elst entryList) {
+	content := fileOps.ReadFile(initFile)
+
+	elst = make([]string, 1)
+	for _, line := range content {
+		if strings.HasPrefix(line, "PAGE ") {
+			pageFile = strings.TrimLeft(line, "#PAGE ")
+			continue
+		}
+		if strings.HasPrefix(line, "DBASE ") {
+			dataFile = strings.TrimLeft(line, "#DATA ")
+			continue
+		}
+		if strings.HasPrefix(line, "LIST ") {
+			listFile = strings.TrimLeft(line, "#LIST ")
+			continue
+		}
+		comment := strings.HasPrefix(line, "#") || strings.HasPrefix(line, " #")
+		if !comment && len(line) > 2 {
+			elst = append(elst, line)
+		}
+	}
+	return elst
+}
+
+/*
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		line := scanner.Text()
+		if strings.HasPrefix(line, "INIT ") {
+			initFile = strings.TrimLeft(line, "#INIT ")
+			continue
+		}
+		if strings.HasPrefix(line, "PAGE ") {
+			pageFile = strings.TrimLeft(line, "PAGE ")
+			continue
+		}
+		if strings.HasPrefix(line, "DBASE ") {
+			dataFile = strings.TrimLeft(line, "DBASE ")
+			continue
+		}
+		if strings.HasPrefix(line, "LIST ") {
+			listFile = strings.TrimLeft(line, "LIST ")
+			continue
+		}
+		comment := strings.HasPrefix(line, "#") || strings.HasPrefix(line, " #")
+		if !comment && len(line) > 2 {
+			sin = append(sin, line)
+		}
+		if err := scanner.Err(); err != nil {
+			panic(err)
+		}
+		fmt.Println("SIN: ", sin)
+	}
+*/
