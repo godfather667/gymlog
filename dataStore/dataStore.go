@@ -8,7 +8,6 @@ import (
 
 type Ftype int
 type Fname string
-type entryList []string
 
 type MyDt int
 
@@ -92,7 +91,7 @@ func Codes() []string {
 	return CodeList
 }
 
-func LoadInit() (elst entryList) {
+func LoadInit() (elst []string) {
 	content := fileOps.ReadFile(initFile)
 
 	elst = make([]string, 1)

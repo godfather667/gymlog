@@ -7,9 +7,10 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"time"
 
+	"gym_project/gymlog/builder"
 	"gym_project/gymlog/dataStore"
+	"gym_project/gymlog/dateOps"
 	"gym_project/gymlog/fileOps"
 
 	"github.com/urfave/cli"
@@ -21,8 +22,11 @@ import (
 type FileType int
 type FileName string
 
+type MyDt int
+
 //
 // Constants
+//
 const (
 	INIT = iota // File Specifers
 	DATA
@@ -30,25 +34,9 @@ const (
 	LIST
 )
 
-type MyDt int
-
 //
-// Variable Definitions
+// Variables
 //
-
-//
-// Functions
-//
-
-//
-// Display Current Date and return in readable format (ASCII)
-//
-func displayDate() (curDate string) {
-	t := time.Now()
-	curDate = fmt.Sprintf("%d/%d/%d", t.Month(), t.Day(), t.Year())
-	fmt.Println("\nCurrent Date:  ", curDate, "\n")
-	return curDate
-}
 
 //
 // Main Function
@@ -56,7 +44,7 @@ func displayDate() (curDate string) {
 
 func main() {
 	// Display Current Date
-	displayDate()
+	fmt.Println("\nCurrent Display: ", dateOps.DisplayDate(), "\n")
 
 	// TEST FileOps:
 	fmt.Println("Filename = ", dataStore.SetName(INIT, "newInit"))
@@ -96,6 +84,12 @@ func main() {
 
 	elst := dataStore.LoadInit()
 	fmt.Println("INI = \n", elst)
+
+	fmt.Println("Page Builder:")
+	page := builder.BuildPage()
+	for _, v := range page {
+		fmt.Print(v)
+	}
 
 	fmt.Println("\n-------- END OF TEST FUNCTIONS ------------\n")
 	//
