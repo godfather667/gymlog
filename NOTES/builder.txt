@@ -1,0 +1,5 @@
+builder Functions
+===================
+func pad(frag string, width int) (cnt int) {
+
+func BuildPage(title bool) []string {

@@ -1,6 +1,3 @@
-MON           WED             FRI
-==================================
-
 MDY   Create_Date   (12x30@2019)
 
 FWC   FW_Curl       (4x10@20)
