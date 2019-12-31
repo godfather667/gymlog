@@ -9,7 +9,7 @@ import (
 	"os"
 
 	"gym_project/gymlog/builder"
-	"gym_project/gymlog/dataStore"
+	_ "gym_project/gymlog/dataStore"
 	"gym_project/gymlog/dateOps"
 	"gym_project/gymlog/fileOps"
 
@@ -46,52 +46,50 @@ func main() {
 	// Display Current Date
 	fmt.Println("\nCurrent Display: ", dateOps.DisplayDate(), "\n")
 
-	// TEST FileOps:
-	fmt.Println("Filename = ", dataStore.SetName(INIT, "newInit"))
-	fmt.Println("Filename = ", dataStore.SetName(DATA, "newDataFile.txt"))
+	// -------------- TEST PACKAGE FUNCTIONS ---------------
+	/*
+		fmt.Println("Filename = ", dataStore.SetName(INIT, "newInit"))
+		fmt.Println("Filename = ", dataStore.SetName(DATA, "newDataFile.txt"))
 
-	fmt.Println("Filename = ", dataStore.Name(INIT))
-	fmt.Println("Filename = ", dataStore.Name(DATA))
-	fmt.Println("Filename = ", dataStore.Name(PAGE))
-	fmt.Println("Filename = ", dataStore.Name(LIST))
-	fmt.Println("")
+		fmt.Println("Filename = ", dataStore.Name(INIT))
+		fmt.Println("Filename = ", dataStore.Name(DATA))
+		fmt.Println("Filename = ", dataStore.Name(PAGE))
+		fmt.Println("Filename = ", dataStore.Name(LIST))
+		fmt.Println("")
 
-	tst1 := []string{"FW Curl", "4", "10", "20"}
-	tst2 := []string{"Leg Press", "4", "10", "220"}
-	tst3 := []string{"LAT", "4", "10", "90"}
+		tst1 := []string{"FW Curl", "4", "10", "20"}
+		tst2 := []string{"Leg Press", "4", "10", "220"}
+		tst3 := []string{"LAT", "4", "10", "90"}
 
-	dataStore.InitStore()
-	dataStore.SetEntry("FWC", tst1)
-	dataStore.SetEntry("LP", tst2)
-	dataStore.SetEntry("LAT", tst3)
+		dataStore.InitStore()
+		dataStore.SetEntry("FWC", tst1)
+		dataStore.SetEntry("LP", tst2)
+		dataStore.SetEntry("LAT", tst3)
 
-	fmt.Println("Entry = ", dataStore.Entry("FWC"))
-	fmt.Println("Entry = ", dataStore.Entry("LP"))
-	fmt.Println("Entry = ", dataStore.Entry("LAT"))
+		fmt.Println("Entry = ", dataStore.Entry("FWC"))
+		fmt.Println("Entry = ", dataStore.Entry("LP"))
+		fmt.Println("Entry = ", dataStore.Entry("LAT"))
 
-	fmt.Println("Codes = ", dataStore.Codes())
-	dataStore.RemEntry("LP")
-	fmt.Println("Codes = ", dataStore.Codes())
+		fmt.Println("Codes = ", dataStore.Codes())
+		dataStore.RemEntry("LP")
+		fmt.Println("Codes = ", dataStore.Codes())
 
-	dataStore.SetEntry("LP", tst2)
-	codes := dataStore.Codes()
-	fileOps.WriteFile("test.bin", codes)
-	retTest := fileOps.ReadFile("test.bin")
-	fmt.Println("RetTest = ", retTest)
+		dataStore.SetEntry("LP", tst2)
+		codes := dataStore.Codes()
+		fileOps.WriteFile("test.bin", codes)
+		retTest := fileOps.ReadFile("test.bin")
+		fmt.Println("RetTest = ", retTest)
 
-	fmt.Println("\n---------- INIT FILE DATA -------------------")
-	//	fmt.Println("INI = ", fileOps.ReadFile(dataStore.Name(INIT)))
+		fmt.Println("\n---------- INIT FILE DATA -------------------")
+		//	fmt.Println("INI = ", fileOps.ReadFile(dataStore.Name(INIT)))
 
-	elst := dataStore.LoadInit()
-	fmt.Println("INI = \n", elst)
+		elst := dataStore.LoadInit()
+		fmt.Println("INI = \n", elst)
 
-	fmt.Println("Page Builder:")
-	page := builder.BuildPage()
-	for _, v := range page {
-		fmt.Print(v)
-	}
+		fmt.Println("Page Builder:")
 
-	fmt.Println("\n-------- END OF TEST FUNCTIONS ------------\n")
+		fmt.Println("\n-------- END OF TEST FUNCTIONS ------------\n")
+	*/
 	//
 	// CLI Front End
 	//
@@ -108,8 +106,8 @@ func main() {
 					Aliases: []string{"p"},
 					Usage:   "Writes Page File",
 					Action: func(c *cli.Context) error {
-						/*
-						 */
+						page := builder.BuildPage()
+						fileOps.WriteFile("pageFile.txt", page)
 						return nil
 					},
 				},

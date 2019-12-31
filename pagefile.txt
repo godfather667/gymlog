@@ -10,19 +10,19 @@ FWT   FW_Tri      (4x10@30)
 
 FWW   FW_Wrist    (4x15@20)
 
-LP    Leg_Press   (1x10@200) (4x10@220)
+LP    Leg_Press   (1x10@220) (4x10@240)
 
-LAT   Lat(L/R/B)  (4x10x80)
+LAT   Lat(L/R/B)  (4x10x90)
 
-LC    Leg_Curl    (1x10@70)  (4x10@85)
+LC    Leg_Curl    (1x10@55)  (4x10@70)
 
 LE    Leg_Extend  (1x10@55)  (4x10@70)
 
-ROW   Row         (1x10@70)  (4X10@85)
+ROW   Row         (4X10@85)
 
-CP    Chest_Press (1x10@20)  (4x10@35)
+CP    Chest_Press (4x10@35)
 
-BLP   Bleg_Press  (1x10@80)  (4x10@100)
+CR    Crunch      (4x15@110)
 
 HT    HTub_Kick   (4x40)     
 
