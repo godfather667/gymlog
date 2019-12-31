@@ -18,7 +18,7 @@ func pad(frag string, width int) (cnt int) {
 func BreakEx(ex string) (cycle, reps, weight int) {
 	cycle, err := strconv.Atoi(extract.Between(ex, "(", "x"))
 	if err != nil {
-		fmt.Println("Malformed exercise specification:  example: (4x10x30) Acutal: ", ex)
+		fmt.Println("Malformed exercise specification:  example: (4x10@30) Acutal: ", ex)
 		return 0, 0, 0
 	}
 	reps, err = strconv.Atoi(extract.Between(ex, "x", ")"))
@@ -28,12 +28,12 @@ func BreakEx(ex string) (cycle, reps, weight int) {
 		if err != nil {
 			reps, err = strconv.Atoi(extract.Between(ex, "x", "@"))
 			if err != nil {
-				fmt.Println("Malformed exercise specification:  example: (4x10x30) Acutal: ", ex)
+				fmt.Println("Malformed exercise specification:  example: (4x10@30) Acutal: ", ex)
 				return 0, 0, 0
 			}
 			weight, err = strconv.Atoi(extract.Between(ex, "@", ")"))
 			if err != nil {
-				fmt.Println("Malformed exercise specification:  example: (4x10x30) Acutal: ", ex)
+				fmt.Println("Malformed exercise specification:  example: (4x10@30) Acutal: ", ex)
 				return 0, 0, 0
 			}
 		}
@@ -89,10 +89,12 @@ func BuildPage(title bool) []string {
 	return page
 }
 
-//func BuildRecord() (dataRecord map[string]map[string][]string) {
-func BuildRecord() {
+func BuildRecord() (dataRecord map[string]map[string][]int) {
 	page := BuildPage(false)
-	//	codeRecord := make(map[string][]string)
+	dataRecord = make(map[string]map[string][]int)
+	codeRecord := make(map[string][]int)
+	exerciseRecord := make([]int, 0)
+	date := dateOps.PageDate()
 
 	for _, v := range page {
 		if len(v) < 2 {
@@ -102,13 +104,26 @@ func BuildRecord() {
 			//			date := dateOps.DisplayDate()
 			continue
 		}
-		if strings.Contains(v, "HT") ||
-			strings.Contains(v, "PW") ||
-			strings.Contains(v, "PC") {
+
+		result := strings.Fields(v)
+		if len(result) != 3 && len(result) != 4 {
+			fmt.Println("Malformed Record: Improper number of Fields!  Fields = ", len(result))
 			continue
 		}
-
-		fmt.Println(v)
+		c, r, w := BreakEx(result[2])
+		if len(result) == 4 {
+			c3, r3, w3 := BreakEx(result[3])
+			if c3 > c {
+				c, r, w = c3, r3, w3
+			}
+		}
+		exerciseRecord = make([]int, 0)
+		exerciseRecord = append(exerciseRecord, c)
+		exerciseRecord = append(exerciseRecord, r)
+		exerciseRecord = append(exerciseRecord, w)
+		codeRecord[result[0]] = exerciseRecord
 	}
-	return
+	dataRecord[date] = codeRecord
+
+	return dataRecord
 }

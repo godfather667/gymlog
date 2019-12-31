@@ -9,7 +9,7 @@ import (
 	"os"
 
 	"gym_project/gymlog/builder"
-	_ "gym_project/gymlog/dataStore"
+	"gym_project/gymlog/dataStore"
 	"gym_project/gymlog/dateOps"
 	_ "gym_project/gymlog/extract"
 	"gym_project/gymlog/fileOps"
@@ -47,62 +47,6 @@ func main() {
 	// Display Current Date
 	fmt.Println("\nCurrent Date: ", dateOps.DisplayDate(), "\n")
 
-	// -------------- TEST PACKAGE FUNCTIONS ---------------
-
-	/*	ex1 := "(1x10@30)"
-		ex2 := "(1x10!30)"
-		ex3 := "(5x200)"
-		fmt.Println(extract.Between(ex1, "x", "@"))
-		c, r, w := builder.BreakEx(ex1)
-		fmt.Println("c = ", c, "  r = ", r, "  w = ", w)
-		c, r, w = builder.BreakEx(ex2)
-		fmt.Println("c = ", c, "  r = ", r, "  w = ", w)
-		c, r, w = builder.BreakEx(ex3)
-		fmt.Println("c = ", c, "  r = ", r, "  w = ", w)
-
-			fmt.Println("Filename = ", dataStore.SetName(DATA, "newDataFile.txt"))
-
-			fmt.Println("Filename = ", dataStore.Name(INIT))
-			fmt.Println("Filename = ", dataStore.Name(DATA))
-			fmt.Println("Filename = ", dataStore.Name(PAGE))
-			fmt.Println("Filename = ", dataStore.Name(LIST))
-			fmt.Println("")
-
-			tst1 := []string{"FW Curl", "4", "10", "20"}
-			tst2 := []string{"Leg Press", "4", "10", "220"}
-			tst3 := []string{"LAT", "4", "10", "90"}
-
-			dataStore.InitStore()
-			dataStore.SetEntry("FWC", tst1)
-			dataStore.SetEntry("LP", tst2)
-			dataStore.SetEntry("LAT", tst3)
-
-			fmt.Println("Entry = ", dataStore.Entry("FWC"))
-			fmt.Println("Entry = ", dataStore.Entry("LP"))
-			fmt.Println("Entry = ", dataStore.Entry("LAT"))
-
-			fmt.Println("Codes = ", dataStore.Codes())
-			dataStore.RemEntry("LP")
-			fmt.Println("Codes = ", dataStore.Codes())
-
-			dataStore.SetEntry("LP", tst2)
-			codes := dataStore.Codes()
-			fileOps.WriteFile("test.bin", codes)
-			retTest := fileOps.ReadFile("test.bin")
-			fmt.Println("RetTest = ", retTest)
-
-			fmt.Println("\n---------- INIT FILE DATA -------------------")
-			//	fmt.Println("INI = ", fileOps.ReadFile(dataStore.Name(INIT)))
-
-			elst := dataStore.LoadInit()
-			fmt.Println("INI = \n", elst)
-
-			fmt.Println("Page Builder:")
-			page := builder.BuildPage()
-			fileOps.WriteFile("pageFile.txt", page)
-
-			fmt.Println("\n-------- END OF TEST FUNCTIONS ------------\n")
-	*/
 	//
 	// CLI Front End
 	//
@@ -129,7 +73,10 @@ func main() {
 					Aliases: []string{"d"},
 					Usage:   "Writes Page Data to Data File",
 					Action: func(c *cli.Context) error {
-						builder.BuildRecord()
+						mp := (builder.BuildRecord())
+						json := fileOps.ToJson(mp)
+						fileOps.WriteJSON(dataStore.Name(DATA), json)
+						//fmt.Println("JSON: ", string(json))
 						return nil
 					},
 				},

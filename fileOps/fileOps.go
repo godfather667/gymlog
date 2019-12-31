@@ -50,6 +50,18 @@ func WriteFile(file string, data []string) {
 	check(err)
 }
 
+func WriteJSON(dataFile string, data []byte) {
+	file, err := os.OpenFile(dataFile, os.O_CREATE|os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	check(err)
+	defer file.Close()
+
+	datawriter := bufio.NewWriter(file)
+
+	_, _ = datawriter.Write(data)
+
+	datawriter.Flush()
+}
+
 //
 // Json Fuctions for MarshalIndent, Marshal Unmarshal
 //

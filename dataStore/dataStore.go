@@ -115,34 +115,3 @@ func LoadInit() (elst []string) {
 	}
 	return elst
 }
-
-/*
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		line := scanner.Text()
-		if strings.HasPrefix(line, "INIT ") {
-			initFile = strings.TrimLeft(line, "#INIT ")
-			continue
-		}
-		if strings.HasPrefix(line, "PAGE ") {
-			pageFile = strings.TrimLeft(line, "PAGE ")
-			continue
-		}
-		if strings.HasPrefix(line, "DBASE ") {
-			dataFile = strings.TrimLeft(line, "DBASE ")
-			continue
-		}
-		if strings.HasPrefix(line, "LIST ") {
-			listFile = strings.TrimLeft(line, "LIST ")
-			continue
-		}
-		comment := strings.HasPrefix(line, "#") || strings.HasPrefix(line, " #")
-		if !comment && len(line) > 2 {
-			sin = append(sin, line)
-		}
-		if err := scanner.Err(); err != nil {
-			panic(err)
-		}
-		fmt.Println("SIN: ", sin)
-	}
-*/
