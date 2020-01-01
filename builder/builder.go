@@ -75,8 +75,6 @@ func BuildPage(title bool) []string {
 		}
 		str += "  "
 
-		//BreakEx(result[2])
-
 		str += result[2]
 		if !strings.Contains(result[0], "MDY") {
 			if len(result) == 4 {

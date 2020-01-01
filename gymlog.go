@@ -47,6 +47,8 @@ func main() {
 	// Display Current Date
 	fmt.Println("\nCurrent Date: ", dateOps.DisplayDate(), "\n")
 
+	fmt.Println(dateOps.InRange(12, 27, 2019))
+
 	//
 	// CLI Front End
 	//
