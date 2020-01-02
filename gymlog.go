@@ -47,7 +47,11 @@ func main() {
 	// Display Current Date
 	fmt.Println("\nCurrent Date: ", dateOps.DisplayDate(), "\n")
 
-	fmt.Println(dateOps.InRange(12, 27, 2019))
+	/*
+		dateOps.SetEnd(1, 3, 2020)
+		dateOps.SetStart(11, 11, 2019)
+		fmt.Println(dateOps.InRange(10, 27, 2019))
+	*/
 
 	//
 	// CLI Front End
@@ -85,32 +89,15 @@ func main() {
 			},
 		},
 		{
+
 			Name:    "list",
 			Aliases: []string{"l"},
-			Usage:   "List database commands:",
-			Subcommands: []*cli.Command{
-				{
-					Name:    "short_dates",
-					Usage:   "mm dd yyyy mm dd yyyy -No dates = all dates, otherwise range is processed",
-					Aliases: []string{"s"},
-					Action: func(c *cli.Context) error {
-						fmt.Println("short dates: ", c.Args().First())
-						/*
-						 */
-						return nil
-					},
-				},
-				{
-					Name:    "long_dates",
-					Usage:   "mm dd yyyy mm dd yyyy -No dates = all dates, otherwise range is processed",
-					Aliases: []string{"l"},
-					Action: func(c *cli.Context) error {
-						fmt.Println("long dates: ", c.Args().First())
-						/*
-						 */
-						return nil
-					},
-				},
+			Usage:   "mm dd yyyy mm dd yyyy -No dates = all dates, otherwise range is processed",
+			Action: func(c *cli.Context) error {
+				fmt.Println("Database Listing: ", c.Args().First())
+				/*
+				 */
+				return nil
 			},
 		},
 		{

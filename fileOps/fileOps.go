@@ -76,7 +76,7 @@ func ToJsonIndent(i interface{}) []byte {
 }
 
 func ToJson(i interface{}) []byte {
-	data, err := json.MarshalIndent(i, "", "   ")
+	data, err := json.Marshal(i)
 	if err != nil {
 		panic(err)
 	}

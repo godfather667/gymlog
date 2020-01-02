@@ -68,10 +68,28 @@ func InRange(mm, dd, yy int) bool {
 		fmt.Println("Validate Failed")
 		return false
 	}
-	input := fmt.Sprintf("%d-%d-%d", yy, mm, dd)
-	layout := "2006-01-02"
-	t1, _ := time.Parse(layout, input)
-	fmt.Println(t1)
+	input := fmt.Sprintf("%d-%02d-%02d", yy, mm, dd)
+	input += "T15:04:05.000-07:00"
+	t, _ := time.Parse("2006-01-02T15:04:05.000-07:00", input)
+
+	input_s := fmt.Sprintf("%d-%02d-%02d", s_yy, s_mm, s_dd)
+	input_s += "T15:04:05.000-07:00"
+	t_s, _ := time.Parse("2006-01-02T15:04:05.000-07:00", input_s)
+
+	input_e := fmt.Sprintf("%d-%02d-%02d", e_yy, e_mm, e_dd)
+	input_e += "T15:04:05.000-07:00"
+	t_e, _ := time.Parse("2006-01-02T15:04:05.000-07:00", input_e)
+
+	fmt.Println("t = ", t, "  t_s = ", t_s, "  t_e", t_e)
+
+	if t.Before(t_s) {
+		fmt.Println("Date before Start!")
+		return false
+	}
+	if t.After(t_e) {
+		fmt.Println("Date After End!")
+		return false
+	}
 
 	return true
 }
