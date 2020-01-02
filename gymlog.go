@@ -11,7 +11,6 @@ import (
 	"gym_project/gymlog/builder"
 	"gym_project/gymlog/dataStore"
 	"gym_project/gymlog/dateOps"
-	_ "gym_project/gymlog/extract"
 	"gym_project/gymlog/fileOps"
 
 	"github.com/urfave/cli"
@@ -46,6 +45,17 @@ const (
 func main() {
 	// Display Current Date
 	fmt.Println("\nCurrent Date: ", dateOps.DisplayDate(), "\n")
+
+	/*
+		dataStore.DateEnd(1, 3, 2020)
+		dataStore.DateStart(11, 1, 2019)
+
+		smm, sdd, syy := dataStore.GetDateStart()
+		emm, edd, eyy := dataStore.GetDateEnd()
+
+		fmt.Println("Start:  ", smm, "  ", sdd, "  ", syy)
+		fmt.Println("End:    ", emm, "  ", edd, "  ", eyy)
+	*/
 
 	/*
 		dateOps.SetEnd(1, 3, 2020)

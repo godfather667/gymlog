@@ -80,7 +80,7 @@ func InRange(mm, dd, yy int) bool {
 	input_e += "T15:04:05.000-07:00"
 	t_e, _ := time.Parse("2006-01-02T15:04:05.000-07:00", input_e)
 
-	fmt.Println("t = ", t, "  t_s = ", t_s, "  t_e", t_e)
+	//	fmt.Println("t = ", t, "  t_s = ", t_s, "  t_e", t_e)
 
 	if t.Before(t_s) {
 		fmt.Println("Date before Start!")
