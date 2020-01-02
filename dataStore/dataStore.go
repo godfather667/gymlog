@@ -30,36 +30,6 @@ var dataFile string = "dataFile"
 var pageFile string = "pageFile.txt"
 var listFile string = "listFile.txt"
 
-var mm_s, dd_s, yy_s, mm_e, dd_e, yy_e int
-
-func DateStart(mm, dd, yy int) {
-	mm_s = mm
-	dd_s = dd
-	yy_s = yy
-	return
-}
-
-func DateEnd(mm, dd, yy int) {
-	mm_e = mm
-	dd_e = dd
-	yy_e = yy
-	return
-}
-
-func GetDateStart() (mm, dd, yy int) {
-	mm = mm_s
-	dd = dd_s
-	yy = yy_s
-	return mm, dd, yy
-}
-
-func GetDateEnd() (mm, dd, yy int) {
-	mm = mm_e
-	dd = dd_e
-	yy = yy_e
-	return mm, dd, yy
-}
-
 func Name(d MyDt) string {
 	switch d {
 	case INIT:
