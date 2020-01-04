@@ -87,12 +87,11 @@ func BuildPage(title bool) []string {
 	return page
 }
 
-func BuildRecord() (dataRecord map[string]map[string][]int) {
+func BuildRecord() (dataRecord string) {
 	page := BuildPage(false)
-	dataRecord = make(map[string]map[string][]int)
-	codeRecord := make(map[string][]int)
-	exerciseRecord := make([]int, 0)
+	fmt.Println("PAGE = ", page)
 	date := dateOps.PageDate()
+	codeRecord := date + "  "
 
 	for _, v := range page {
 		if len(v) < 2 {
@@ -115,13 +114,13 @@ func BuildRecord() (dataRecord map[string]map[string][]int) {
 				c, r, w = c3, r3, w3
 			}
 		}
-		exerciseRecord = make([]int, 0)
-		exerciseRecord = append(exerciseRecord, c)
-		exerciseRecord = append(exerciseRecord, r)
-		exerciseRecord = append(exerciseRecord, w)
-		codeRecord[result[0]] = exerciseRecord
+		codeRecord += " , " + result[0] + " "
+		codeRecord += strconv.Itoa(c) + " "
+		codeRecord += strconv.Itoa(r) + " "
+		codeRecord += strconv.Itoa(w)
 	}
-	dataRecord[date] = codeRecord
-
-	return dataRecord
+	codeRecord = codeRecord[:len(codeRecord)-1]
+	codeRecord += "\n;"
+	fmt.Println("Data Record = ", codeRecord)
+	return codeRecord
 }
