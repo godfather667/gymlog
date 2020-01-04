@@ -75,30 +75,23 @@ func main() {
 		{
 			Name:    "page",
 			Aliases: []string{"p"},
-			Usage:   "Page Storage Commands: ",
-			Subcommands: []*cli.Command{
-				{
-					Name:    "page",
-					Aliases: []string{"p"},
-					Usage:   "Writes Page File",
-					Action: func(c *cli.Context) error {
-						page := builder.BuildPage(true)
-						fileOps.WriteFile("pageFile.txt", page)
-						return nil
-					},
-				},
-				{
-					Name:    "data",
-					Aliases: []string{"d"},
-					Usage:   "Writes Page Data to Data File",
-					Action: func(c *cli.Context) error {
-						mapD := builder.BuildRecord()
-						fmt.Println("mapD = ", mapD)
-						b := []byte(mapD)
-						fileOps.WriteAppend(dataStore.Name(DATA), b)
-						return nil
-					},
-				},
+			Usage:   "Print Page for Log Book: ",
+			Action: func(c *cli.Context) error {
+				page := builder.BuildPage(true)
+				fileOps.WriteFile("pageFile.txt", page)
+				return nil
+			},
+		},
+		{
+			Name:    "data",
+			Aliases: []string{"d"},
+			Usage:   "Store Page in Database: ",
+			Action: func(c *cli.Context) error {
+				mapD := builder.BuildRecord()
+				fmt.Println("mapD = ", mapD)
+				b := []byte(mapD)
+				fileOps.WriteAppend(dataStore.Name(DATA), b)
+				return nil
 			},
 		},
 		{
@@ -112,7 +105,9 @@ func main() {
 
 				lines := strings.Split(newDat, ";")
 				for i, v := range lines {
-					fmt.Println("[", i, "] ", v)
+					if len(v) > 1 {
+						fmt.Println("[", i+1, "] ", v)
+					}
 				}
 				return nil
 			},
