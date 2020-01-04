@@ -13,8 +13,7 @@
 **gymlog list, l** ---Lists Contents of Database by range:
 list [ mm dd yyyy [ mm dd yyyy] } -No dates = all dates
 
-**gymlog remove, r** ---Remove a record from Database:
-Remove <record number> (see listing)
+**gymlog remove, r** ---Remove a record from Database ---Remove <record number> (see listing)
 
 **gymloig chart, c** ---Produces Progress Chart:
 chart [ mm dd yyyy [ mm dd yyyy ] ] -No dates = all dates
