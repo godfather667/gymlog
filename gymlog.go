@@ -4,6 +4,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"os"
@@ -23,6 +24,9 @@ type FileType int
 type FileName string
 
 type MyDt int
+
+type dataRecord map[string]map[string][]int
+type codeRecord map[string][]int
 
 //
 // Constants
@@ -89,24 +93,35 @@ func main() {
 					Aliases: []string{"d"},
 					Usage:   "Writes Page Data to Data File",
 					Action: func(c *cli.Context) error {
-						mp := (builder.BuildRecord())
-						json := fileOps.ToJson(mp)
-						fileOps.WriteJSON(dataStore.Name(DATA), json)
-						//fmt.Println("JSON: ", string(json))
+						mapD := builder.BuildRecord()
+						js, _ := json.Marshal(mapD)
+						fmt.Println("mapD = ", mapD)
+						fileOps.WriteAppend(dataStore.Name(DATA), js)
+						//						fmt.Println("JSON: ", string(json))
 						return nil
 					},
 				},
 			},
 		},
 		{
-
 			Name:    "list",
 			Aliases: []string{"l"},
 			Usage:   "mm dd yyyy mm dd yyyy -No dates = all dates, otherwise range is processed",
 			Action: func(c *cli.Context) error {
 				fmt.Println("Database Listing: ", c.Args().First())
-				/*
-				 */
+				//				data := fileOps.LoadDatabase(dataStore.Name(DATA))
+				//				fmt.Println("DATA RECORD = ", data)
+				dat := codeRecord{}
+				newDat := fileOps.ReadData(dataStore.Name(DATA))
+				//				if err := json.Unmarshal(newDat, &dat); err != nil {
+				//					panic(err)
+				//				}
+				fmt.Println("newData = ", newDat)
+				json.Unmarshal(newDat, &dat)
+				fmt.Println("Dat = ", dat)
+				for i, v := range dat {
+					fmt.Println("[", i, "] ", v)
+				}
 				return nil
 			},
 		},

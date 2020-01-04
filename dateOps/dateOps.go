@@ -9,11 +9,6 @@ import (
 	"github.com/urfave/cli"
 )
 
-const (
-	DATE_1 = iota // File Specifers
-	DATE_2
-)
-
 var mm_s, dd_s, yy_s, mm_e, dd_e, yy_e int
 
 func DateStart(mm, dd, yy int) bool {
@@ -36,41 +31,47 @@ func DateEnd(mm, dd, yy int) bool {
 	return false
 }
 
-func getDateStart() (mm, dd, yy int) {
-	mm = mm_s
-	dd = dd_s
-	yy = yy_s
-	return mm, dd, yy
+func getDateStart() (r bool, mm, dd, yy int) {
+	if Validate(mm, dd, yy) {
+		mm = mm_s
+		dd = dd_s
+		yy = yy_s
+		return true, mm, dd, yy
+	}
+	return false, 0, 0, 0
+}
+func getDateEnd() (r bool, mm, dd, yy int) {
+	if Validate(mm, dd, yy) {
+		mm = mm_e
+		dd = dd_e
+		yy = yy_e
+		return true, mm, dd, yy
+	}
+	return false, 0, 0, 0
 }
 
-func getDateEnd() (mm, dd, yy int) {
-	mm = mm_e
-	dd = dd_e
-	yy = yy_e
-	return mm, dd, yy
-}
-
-func LoadRecordDate(dateSelect int, c *cli.Context) bool {
-	if dateSelect == DATE_1 && c.NArg() > 2 {
+func LoadCmdDate(c *cli.Context) {
+	DateStart(0, 0, 0)
+	DateEnd(0, 0, 0)
+	if c.NArg() > 2 {
 		mm, _ := strconv.Atoi(c.Args().Get(0))
 		dd, _ := strconv.Atoi(c.Args().Get(1))
 		yy, _ := strconv.Atoi(c.Args().Get(2))
-		if Validate(mm, dd, yy) {
-			DateStart(mm, dd, yy)
-			return true
+		if !Validate(mm, dd, yy) {
+			return
 		}
-	}
+		DateStart(mm, dd, yy)
 
-	if dateSelect == DATE_2 && c.NArg() == 6 {
-		mm, _ := strconv.Atoi(c.Args().Get(0))
-		dd, _ := strconv.Atoi(c.Args().Get(1))
-		yy, _ := strconv.Atoi(c.Args().Get(2))
-		if Validate(mm, dd, yy) {
-			DateStart(mm, dd, yy)
-			return true
+		if c.NArg() == 6 {
+			mm, _ := strconv.Atoi(c.Args().Get(0))
+			dd, _ := strconv.Atoi(c.Args().Get(1))
+			yy, _ := strconv.Atoi(c.Args().Get(2))
+			if Validate(mm, dd, yy) {
+				DateEnd(mm, dd, yy)
+			}
 		}
 	}
-	return false
+	return
 }
 
 //
@@ -101,15 +102,20 @@ func InRange(mm, dd, yy int) bool {
 	input += "T15:04:05.000-07:00"
 	t, _ := time.Parse("2006-01-02T15:04:05.000-07:00", input)
 
-	s_yy, s_mm, s_dd := getDateStart()
-	input_s := fmt.Sprintf("%d-%02d-%02d", s_yy, s_mm, s_dd)
-	input_s += "T15:04:05.000-07:00"
-	t_s, _ := time.Parse("2006-01-02T15:04:05.000-07:00", input_s)
+	var t_s time.Time
+	var t_e time.Time
 
-	e_yy, e_mm, e_dd := getDateEnd()
-	input_e := fmt.Sprintf("%d-%02d-%02d", e_yy, e_mm, e_dd)
-	input_e += "T15:04:05.000-07:00"
-	t_e, _ := time.Parse("2006-01-02T15:04:05.000-07:00", input_e)
+	if ret, s_yy, s_mm, s_dd := getDateStart(); ret {
+		input_s := fmt.Sprintf("%d-%02d-%02d", s_yy, s_mm, s_dd)
+		input_s += "T15:04:05.000-07:00"
+		t_s, _ = time.Parse("2006-01-02T15:04:05.000-07:00", input_s)
+	}
+
+	if ret, e_yy, e_mm, e_dd := getDateEnd(); ret {
+		input_e := fmt.Sprintf("%d-%02d-%02d", e_yy, e_mm, e_dd)
+		input_e += "T15:04:05.000-07:00"
+		t_e, _ = time.Parse("2006-01-02T15:04:05.000-07:00", input_e)
+	}
 
 	fmt.Println("t = ", t, "  t_s = ", t_s, "  t_e", t_e)
 

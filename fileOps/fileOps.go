@@ -10,6 +10,8 @@ import (
 	"strings"
 )
 
+type dataRecord map[string]map[string][]int
+
 //
 // Database File Functions
 //
@@ -40,6 +42,17 @@ func ReadFile(file string) []string {
 	return strings.Split(string(content), "\n")
 }
 
+func ReadData(file string) []byte {
+	content, err := ioutil.ReadFile(file)
+	check(err)
+	return content
+}
+
+func WriteData(file string, data []byte) {
+	err := ioutil.WriteFile(file, data, 0644)
+	check(err)
+}
+
 func WriteFile(file string, data []string) {
 	content := ""
 	for _, v := range data {
@@ -50,8 +63,8 @@ func WriteFile(file string, data []string) {
 	check(err)
 }
 
-func WriteJSON(dataFile string, data []byte) {
-	file, err := os.OpenFile(dataFile, os.O_CREATE|os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+func WriteAppend(dataFile string, data []byte) {
+	file, err := os.OpenFile(dataFile, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
 	check(err)
 	defer file.Close()
 
@@ -60,6 +73,30 @@ func WriteJSON(dataFile string, data []byte) {
 	_, _ = datawriter.Write(data)
 
 	datawriter.Flush()
+}
+
+func storeDatabase(db interface{}, file string) {
+	js := ToJson(db) //Marshal
+	err := ioutil.WriteFile(file, js, 0644)
+	check(err)
+}
+
+func loadDatabase(dataFile string) []string {
+	ldb, err := ioutil.ReadFile(dataFile)
+	if err != nil { // Assume No File Present
+		storeDatabase("", "test")
+		ldb, err = ioutil.ReadFile(dataFile)
+		check(err)
+	}
+	check(err)
+	s := string(ldb)
+	s = strings.Replace(s, ",,", ",", -1)
+	db := strings.Split(s, "\n")
+	odb := make([]string, 1)
+	for i, v := range db {
+		fmt.Println("[", i, "]  ", v)
+	}
+	return odb
 }
 
 //
@@ -80,7 +117,6 @@ func ToJson(i interface{}) []byte {
 	if err != nil {
 		panic(err)
 	}
-
 	return data
 
 }
@@ -89,88 +125,8 @@ func FromJson(v []byte, vv interface{}) {
 	json.Unmarshal(v, &vv)
 }
 
-/*
-
-
-func readData() []string {
-	data := make([]string, 0)
-	file, err := os.Open(dataFile)
-	check(err)
-	defer file.Close()
-
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		data = append(data, scanner.Text())
-	}
+func LoadDatabase(file string) (db []string) {
+	data := ReadFile(file)
+	//	fmt.Println(data)
 	return data
 }
-
-func writePage(data []string) {
-	_ = os.Remove(pageFile)
-	file, err := os.OpenFile(pageFile, os.O_CREATE|os.O_WRONLY, 0644)
-	check(err)
-	defer file.Close()
-
-	datawriter := bufio.NewWriter(file)
-
-	for _, line := range data {
-		_, _ = datawriter.WriteString(line + "\n")
-	}
-	datawriter.Flush()
-}
-
-func writeInit(data []string) {
-	_ = os.Remove(pageFile)
-	file, err := os.OpenFile(initFile, os.O_CREATE|os.O_WRONLY, 0644)
-	check(err)
-	defer file.Close()
-
-	datawriter := bufio.NewWriter(file)
-
-	for _, line := range data {
-		_, _ = datawriter.WriteString(line + "\n")
-	}
-	datawriter.Flush()
-}
-func writeData(data string) {
-	file, err := os.OpenFile(dataFile, os.O_CREATE|os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-	check(err)
-	defer file.Close()
-
-	datawriter := bufio.NewWriter(file)
-
-	_, _ = datawriter.WriteString(data)
-
-	datawriter.Flush()
-}
-
-func loadDatabase() []string {
-	ldb, err := ioutil.ReadFile(dataFile)
-	if err != nil { // Assume No File Present
-		writeData("")
-		ldb, err = ioutil.ReadFile(dataFile)
-		check(err)
-	}
-	check(err)
-	s := string(ldb)
-	s = strings.Replace(s, ",,", ",", -1)
-	db := strings.Split(s, "\n")
-	odb := make([]string, 1)
-	for _, v := range db {
-		getRecordDate(v) // Get Record Date
-		if !InRange() {
-			continue
-		}
-	}
-	return odb
-}
-
-func storeDatabase(db []interface{}, fileName string) {
-	js := toJson(db) //Marshal
-
-	err := ioutil.WriteFile(dataFile, js, 0644)
-	check(err)
-}
-
-
-*/

@@ -11,6 +11,8 @@ type Fname string
 
 type MyDt int
 
+type dataRecord map[string]map[string][]int
+
 const (
 	INIT = iota
 	DATA
@@ -21,6 +23,8 @@ const (
 //
 // Data Base Structures and Variables
 //
+
+var dataDB dataRecord
 
 var Store map[string][]string
 var CodeList []string
