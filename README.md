@@ -6,9 +6,9 @@
 
 **COMMANDS**:
 
-**gymlog page, p** ---Prints Page for Log Book: (Formats gymlog.ini for Log Book)
+**gymlog page, p** ---Prints Page for Log Book: (Formats _gymlog.ini_ for Log Book)
 
-**gymlog data, d** ---Stores Page in Database: (Database Format)
+**gymlog data, d** ---Stores Page in Database: (Formats _gymlog.ini_ for Database)
 
 **gymlog list, l** ---Lists Contents of Database by range:
 list [ mm dd yyyy [ mm dd yyyy] } -No dates = all dates
