@@ -75,7 +75,7 @@ func main() {
 		{
 			Name:    "page",
 			Aliases: []string{"p"},
-			Usage:   "Print Page for Log Book: ",
+			Usage:   "Prints Page for Log Book: (Formats gymlog.ini for Log Book)\n",
 			Action: func(c *cli.Context) error {
 				page := builder.BuildPage(true)
 				fileOps.WriteFile("pageFile.txt", page)
@@ -85,7 +85,7 @@ func main() {
 		{
 			Name:    "data",
 			Aliases: []string{"d"},
-			Usage:   "Store Page in Database: ",
+			Usage:   "Store Page in Database: (Database Format)\n",
 			Action: func(c *cli.Context) error {
 				mapD := builder.BuildRecord()
 				fmt.Println("mapD = ", mapD)
@@ -97,7 +97,7 @@ func main() {
 		{
 			Name:    "list",
 			Aliases: []string{"l"},
-			Usage:   "mm dd yyyy mm dd yyyy -No dates = all dates, otherwise range is processed",
+			Usage:   "List Contents of Database by range:\n            list mm dd yyyy mm dd yyyy -No dates = all dates, otherwise range is processed\n",
 			Action: func(c *cli.Context) error {
 				fmt.Println("Database Listing: ", c.Args().First())
 
@@ -113,22 +113,21 @@ func main() {
 			},
 		},
 		{
-			Name:    "report",
+			Name:    "remove",
 			Aliases: []string{"r"},
-			Usage:   "mm dd yyyy mm dd yyyy -No dates = all dates, otherwise range is processed",
+			Usage:   "Remove a record from Database:\n              Remove <record number> (see listing)\n",
 			Action: func(c *cli.Context) error {
-				fmt.Println("Report: ", c.Args().First())
-				/*
-				 */
+				fmt.Println("Remove Database Record: ", c.Args().First())
+
 				return nil
 			},
 		},
 		{
 			Name:    "chart",
 			Aliases: []string{"c"},
-			Usage:   "mm dd yyyy mm dd yyyy -No dates = all dates, otherwise range is processed",
+			Usage:   "Produces Progress Chart:\n             chart mm dd yyyy mm dd yyyy -No dates = all dates, otherwise range is processed\n",
 			Action: func(c *cli.Context) error {
-				fmt.Println("chart: ", c.Args().First())
+				fmt.Println("Report: ", c.Args().First())
 				/*
 				 */
 				return nil
