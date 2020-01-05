@@ -124,7 +124,32 @@ func main() {
 					fmt.Println("Err - Improper Number - Request Ignored!")
 					return nil
 				}
-				fmt.Println("Record Number = ", rn)
+
+				newDat := string(fileOps.ReadData(dataStore.Name(DATA)))
+				lines := strings.Split(newDat, ";")
+
+				ll := 0
+				for i, v := range lines {
+					if len(v) < 2 {
+						ll = i
+					}
+				}
+
+				rn -= 1
+				if rn >= ll {
+					fmt.Println("Err - Line Number does not Exist")
+					return nil
+				}
+
+				ol := ""
+				for i := 0; i < rn; i++ {
+					ol += lines[i] + ";"
+				}
+				for j := rn + 1; j < ll; j++ {
+					ol += lines[j] + ";"
+				}
+				b := []byte(ol)
+				fileOps.WriteData(dataStore.Name(DATA), b)
 				return nil
 			},
 		},
