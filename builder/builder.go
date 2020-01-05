@@ -5,8 +5,20 @@ import (
 	"gym_project/gymlog/dataStore"
 	"gym_project/gymlog/dateOps"
 	"gym_project/gymlog/extract"
+	"gym_project/gymlog/fileOps"
+
 	"strconv"
 	"strings"
+)
+
+//
+// Constants
+//
+const (
+	INIT = iota // File Specifers
+	DATA
+	PAGE
+	LIST
 )
 
 func pad(frag string, width int) (cnt int) {
@@ -124,3 +136,79 @@ func BuildRecord() (dataRecord string) {
 	fmt.Println("Data Record = ", codeRecord)
 	return codeRecord
 }
+
+func RebuildDatabase(rn int) {
+	newDat := string(fileOps.ReadData(dataStore.Name(DATA)))
+	lines := strings.Split(newDat, ";")
+
+	ll := 0
+	for i, v := range lines {
+		if len(v) < 2 {
+			ll = i
+		}
+	}
+
+	rn -= 1
+	if rn >= ll {
+		fmt.Println("Err - Line Number does not Exist")
+		return
+	}
+
+	ol := ""
+	for i := 0; i < rn; i++ {
+		ol += lines[i] + ";"
+	}
+	for j := rn + 1; j < ll; j++ {
+		ol += lines[j] + ";"
+	}
+	b := []byte(ol)
+	fileOps.WriteData(dataStore.Name(DATA), b)
+	return
+}
+
+func BuildChart() {
+	newDat := string(fileOps.ReadData(dataStore.Name(DATA)))
+	lines := strings.Split(newDat, ";")
+
+	ex := strings.Split(lines[0], ",")
+	lex := len(ex)
+	fmt.Println("lex = ", lex)
+
+	for i, v := range ex {
+		fmt.Println("[", i, "]  ", v)
+	}
+	date := dateOps.ConvertDate(ex[0])
+	fmt.Println(date)
+
+	return
+}
+
+/*
+
+		ll := 0
+		for i, v := range lines {
+			if len(v) < 2 {
+				ll = i
+			}
+		}
+
+		rn -= 1
+		if rn >= ll {
+			fmt.Println("Err - Line Number does not Exist")
+			return
+		}
+
+		ol := ""
+		for i := 0; i < rn; i++ {
+			ol += lines[i] + ";"
+		}
+		for j := rn + 1; j < ll; j++ {
+			ol += lines[j] + ";"
+		}
+		b := []byte(ol)
+		fileOps.WriteData(dataStore.Name(DATA), b)
+
+
+	return
+}
+*/

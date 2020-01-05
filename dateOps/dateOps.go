@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"regexp"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/urfave/cli"
@@ -72,6 +73,17 @@ func LoadCmdDate(c *cli.Context) {
 		}
 	}
 	return
+}
+
+//
+// Convert Display Date (MMxDD@2020) into MM/DD/YY
+//
+func ConvertDate(dDate string) (oDate string) {
+	oDate = strings.TrimLeft(dDate, "(")
+	oDate = strings.Trim(oDate, " )")
+	oDate = strings.Replace(oDate, "x", "/", 1)
+	oDate = strings.Replace(oDate, "@", "/", 1)
+	return oDate
 }
 
 //

@@ -124,32 +124,7 @@ func main() {
 					fmt.Println("Err - Improper Number - Request Ignored!")
 					return nil
 				}
-
-				newDat := string(fileOps.ReadData(dataStore.Name(DATA)))
-				lines := strings.Split(newDat, ";")
-
-				ll := 0
-				for i, v := range lines {
-					if len(v) < 2 {
-						ll = i
-					}
-				}
-
-				rn -= 1
-				if rn >= ll {
-					fmt.Println("Err - Line Number does not Exist")
-					return nil
-				}
-
-				ol := ""
-				for i := 0; i < rn; i++ {
-					ol += lines[i] + ";"
-				}
-				for j := rn + 1; j < ll; j++ {
-					ol += lines[j] + ";"
-				}
-				b := []byte(ol)
-				fileOps.WriteData(dataStore.Name(DATA), b)
+				builder.RebuildDatabase(rn)
 				return nil
 			},
 		},
@@ -158,9 +133,10 @@ func main() {
 			Aliases: []string{"c"},
 			Usage:   "Produces Progress Chart:\n             chart mm dd yyyy mm dd yyyy -No dates = all dates, otherwise range is processed\n",
 			Action: func(c *cli.Context) error {
-				fmt.Println("Report: ", c.Args().First())
-				/*
-				 */
+				fmt.Println("Chart: ", c.Args().First())
+
+				builder.BuildChart()
+
 				return nil
 			},
 		},

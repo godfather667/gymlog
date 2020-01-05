@@ -10,8 +10,6 @@ import (
 	"strings"
 )
 
-type dataRecord map[string]map[string][]int
-
 //
 // Database File Functions
 //
