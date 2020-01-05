@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strconv"
 	"strings"
 
 	"gym_project/gymlog/builder"
@@ -38,7 +39,7 @@ const (
 )
 
 //
-// Variables
+// Helper Function
 //
 
 //
@@ -117,8 +118,13 @@ func main() {
 			Aliases: []string{"r"},
 			Usage:   "Remove a record from Database:\n              Remove <record number> (see listing)\n",
 			Action: func(c *cli.Context) error {
-				fmt.Println("Remove Database Record: ", c.Args().First())
-
+				recNumber := c.Args().First()
+				rn, err := strconv.Atoi(recNumber)
+				if err != nil {
+					fmt.Println("Err - Improper Number - Request Ignored!")
+					return nil
+				}
+				fmt.Println("Record Number = ", rn)
 				return nil
 			},
 		},
