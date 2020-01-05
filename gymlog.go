@@ -12,7 +12,6 @@ import (
 
 	"gym_project/gymlog/builder"
 	"gym_project/gymlog/dataStore"
-	_ "gym_project/gymlog/dateOps"
 	"gym_project/gymlog/fileOps"
 
 	"github.com/urfave/cli"
@@ -111,14 +110,22 @@ func main() {
 			Aliases: []string{"c"},
 			Usage:   "Produces Progress Chart:\n              chart mm dd yyyy mm dd yyyy -No dates = all dates, otherwise range is processed\n",
 			Action: func(c *cli.Context) error {
+				fmt.Println("\n")
 				builder.BuildChart()
 
 				newDat := string(fileOps.ReadData(dataStore.Name(DATA)))
 
 				lines := strings.Split(newDat, ";")
+				fmt.Println("Lines ", lines[0])
+
+				ex := strings.Split(lines[0], ",")
+				fmt.Println("ex = ", ex)
+				//				date := dateOps.ConvertDate(ex[0])
+				//				t := builder.BuildTitle(ex, date)
 				for _, v := range lines {
 					if newLine, ok := builder.BuildLine(v); ok {
-						fmt.Println("NL: ", newLine)
+						fmt.Println(newLine)
+						fmt.Println(builder.Spacer)
 					}
 				}
 				return nil

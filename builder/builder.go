@@ -12,6 +12,12 @@ import (
 )
 
 //
+// Variables
+//
+
+var Spacer string // Spacer Line for Chart
+
+//
 // Constants
 //
 const (
@@ -34,7 +40,6 @@ func fix(in string, fixLen int, suf string) (fix string) {
 		fix += " "
 	}
 	fix += "|"
-	fmt.Println(fix)
 	return fix
 }
 
@@ -139,9 +144,16 @@ func BuildRecord() (dataRecord string) {
 		codeRecord += " , " + result[0] + " "
 		codeRecord += strconv.Itoa(c) + " "
 		codeRecord += strconv.Itoa(r) + " "
-		codeRecord += strconv.Itoa(w)
+		fmt.Println("C = ", c, "  R = ", r, "  W = ", w)
+		if w == 0 {
+			fmt.Println("w = ", w)
+			codeRecord += strconv.Itoa(r)
+			fmt.Println("R = ", r)
+		} else {
+			codeRecord += strconv.Itoa(w)
+		}
 	}
-	codeRecord = codeRecord[:len(codeRecord)-1]
+	//	codeRecord = codeRecord[:len(codeRecord)-1]
 	codeRecord += "\n;"
 	fmt.Println("Data Record = ", codeRecord)
 	return codeRecord
@@ -176,7 +188,7 @@ func RebuildDatabase(rn int) {
 	return
 }
 
-func buildTitle(ex []string, date string) (title []string) {
+func BuildTitle(ex []string, date string) (title []string) {
 	title = make([]string, 2)
 	title[0] += "Rec Date  |"
 	for i, v := range ex {
@@ -191,25 +203,35 @@ func buildTitle(ex []string, date string) (title []string) {
 	for i := 1; i < len(ex); i++ {
 		title[1] += "----|"
 	}
-
+	Spacer = title[1]
 	return title
 }
 
 func BuildLine(line string) (newLine string, ok bool) {
 
 	item := strings.Split(line, ",")
+	if len(item) < 3 {
+		return "", false
+	}
 	newLine = ""
 	for i, v := range item {
 		if i == 0 {
-			fmt.Println("len = ", len(newLine))
-			newLine = fix(dateOps.ConvertDate(v), 10, "|")
+			if nl := dateOps.ConvertDate(v); len(nl) > 2 {
+				newLine = fix(nl, 10, "|")
+			}
 		} else {
 			y := strings.Fields(v)
-			fmt.Println("[", i, "]  ", y[0])
+			if len(y) == 4 {
+				newLine += fix(y[3], 4, "|")
+			} else {
+				newLine += fix(y[2], 4, "|")
+			}
 		}
-		fmt.Println("newItem: ", newLine)
 	}
-	return "", true
+	if len(newLine) < 1 {
+		return "", false
+	}
+	return newLine, true
 }
 
 func BuildChart() {
@@ -219,7 +241,7 @@ func BuildChart() {
 	ex := strings.Split(lines[0], ",")
 	date := dateOps.ConvertDate(ex[0])
 
-	title := buildTitle(ex, date)
+	title := BuildTitle(ex, date)
 	fmt.Println(title[0])
 	fmt.Println(title[1])
 
