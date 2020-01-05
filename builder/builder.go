@@ -27,6 +27,17 @@ func pad(frag string, width int) (cnt int) {
 	return cnt
 }
 
+func fix(in string, fixLen int, suf string) (fix string) {
+	l := len(in)
+	fix = in
+	for i := l; i < fixLen; i++ {
+		fix += " "
+	}
+	fix += "|"
+	fmt.Println(fix)
+	return fix
+}
+
 func BreakEx(ex string) (cycle, reps, weight int) {
 	cycle, err := strconv.Atoi(extract.Between(ex, "(", "x"))
 	if err != nil {
@@ -101,7 +112,6 @@ func BuildPage(title bool) []string {
 
 func BuildRecord() (dataRecord string) {
 	page := BuildPage(false)
-	fmt.Println("PAGE = ", page)
 	date := dateOps.PageDate()
 	codeRecord := date + "  "
 
@@ -166,49 +176,52 @@ func RebuildDatabase(rn int) {
 	return
 }
 
+func buildTitle(ex []string, date string) (title []string) {
+	title = make([]string, 2)
+	title[0] += "Rec Date  |"
+	for i, v := range ex {
+		if i == 0 {
+			continue
+		}
+		y := strings.Fields(v)
+		title[0] += fix(y[0], 4, "|")
+	}
+
+	title[1] += "----------|"
+	for i := 1; i < len(ex); i++ {
+		title[1] += "----|"
+	}
+
+	return title
+}
+
+func BuildLine(line string) (newLine string, ok bool) {
+
+	item := strings.Split(line, ",")
+	newLine = ""
+	for i, v := range item {
+		if i == 0 {
+			fmt.Println("len = ", len(newLine))
+			newLine = fix(dateOps.ConvertDate(v), 10, "|")
+		} else {
+			y := strings.Fields(v)
+			fmt.Println("[", i, "]  ", y[0])
+		}
+		fmt.Println("newItem: ", newLine)
+	}
+	return "", true
+}
+
 func BuildChart() {
 	newDat := string(fileOps.ReadData(dataStore.Name(DATA)))
 	lines := strings.Split(newDat, ";")
 
 	ex := strings.Split(lines[0], ",")
-	lex := len(ex)
-	fmt.Println("lex = ", lex)
-
-	for i, v := range ex {
-		fmt.Println("[", i, "]  ", v)
-	}
 	date := dateOps.ConvertDate(ex[0])
-	fmt.Println(date)
+
+	title := buildTitle(ex, date)
+	fmt.Println(title[0])
+	fmt.Println(title[1])
 
 	return
 }
-
-/*
-
-		ll := 0
-		for i, v := range lines {
-			if len(v) < 2 {
-				ll = i
-			}
-		}
-
-		rn -= 1
-		if rn >= ll {
-			fmt.Println("Err - Line Number does not Exist")
-			return
-		}
-
-		ol := ""
-		for i := 0; i < rn; i++ {
-			ol += lines[i] + ";"
-		}
-		for j := rn + 1; j < ll; j++ {
-			ol += lines[j] + ";"
-		}
-		b := []byte(ol)
-		fileOps.WriteData(dataStore.Name(DATA), b)
-
-
-	return
-}
-*/

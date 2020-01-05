@@ -12,7 +12,7 @@ import (
 
 	"gym_project/gymlog/builder"
 	"gym_project/gymlog/dataStore"
-	"gym_project/gymlog/dateOps"
+	_ "gym_project/gymlog/dateOps"
 	"gym_project/gymlog/fileOps"
 
 	"github.com/urfave/cli"
@@ -47,25 +47,6 @@ const (
 //
 
 func main() {
-	// Display Current Date
-	fmt.Println("\nCurrent Date: ", dateOps.DisplayDate(), "\n")
-
-	/*
-		dataStore.DateEnd(1, 3, 2020)
-		dataStore.DateStart(11, 1, 2019)
-
-		smm, sdd, syy := dataStore.GetDateStart()
-		emm, edd, eyy := dataStore.GetDateEnd()
-
-		fmt.Println("Start:  ", smm, "  ", sdd, "  ", syy)
-		fmt.Println("End:    ", emm, "  ", edd, "  ", eyy)
-	*/
-
-	/*
-		dateOps.SetEnd(1, 3, 2020)
-		dateOps.SetStart(11, 11, 2019)
-		fmt.Println(dateOps.InRange(10, 27, 2019))
-	*/
 
 	//
 	// CLI Front End
@@ -74,9 +55,9 @@ func main() {
 
 	app.Commands = []*cli.Command{
 		{
-			Name:    "page",
+			Name:    "\n   page",
 			Aliases: []string{"p"},
-			Usage:   "Prints Page for Log Book: (Formats gymlog.ini for Log Book)\n",
+			Usage:   "  Prints Page for Log Book: (Formats gymlog.ini for Log Book)\n",
 			Action: func(c *cli.Context) error {
 				page := builder.BuildPage(true)
 				fileOps.WriteFile("pageFile.txt", page)
@@ -86,10 +67,9 @@ func main() {
 		{
 			Name:    "data",
 			Aliases: []string{"d"},
-			Usage:   "Store Page in Database: (Database Format)\n",
+			Usage:   "  Store Page in Database: (Database Format)\n",
 			Action: func(c *cli.Context) error {
 				mapD := builder.BuildRecord()
-				fmt.Println("mapD = ", mapD)
 				b := []byte(mapD)
 				fileOps.WriteAppend(dataStore.Name(DATA), b)
 				return nil
@@ -98,10 +78,8 @@ func main() {
 		{
 			Name:    "list",
 			Aliases: []string{"l"},
-			Usage:   "List Contents of Database by range:\n            list mm dd yyyy mm dd yyyy -No dates = all dates, otherwise range is processed\n",
+			Usage:   "  List Contents of Database by range:\n              list mm dd yyyy mm dd yyyy -No dates = all dates, otherwise range is processed\n",
 			Action: func(c *cli.Context) error {
-				fmt.Println("Database Listing: ", c.Args().First())
-
 				newDat := string(fileOps.ReadData(dataStore.Name(DATA)))
 
 				lines := strings.Split(newDat, ";")
@@ -129,14 +107,20 @@ func main() {
 			},
 		},
 		{
-			Name:    "chart",
+			Name:    " chart",
 			Aliases: []string{"c"},
-			Usage:   "Produces Progress Chart:\n             chart mm dd yyyy mm dd yyyy -No dates = all dates, otherwise range is processed\n",
+			Usage:   "Produces Progress Chart:\n              chart mm dd yyyy mm dd yyyy -No dates = all dates, otherwise range is processed\n",
 			Action: func(c *cli.Context) error {
-				fmt.Println("Chart: ", c.Args().First())
-
 				builder.BuildChart()
 
+				newDat := string(fileOps.ReadData(dataStore.Name(DATA)))
+
+				lines := strings.Split(newDat, ";")
+				for _, v := range lines {
+					if newLine, ok := builder.BuildLine(v); ok {
+						fmt.Println("NL: ", newLine)
+					}
+				}
 				return nil
 			},
 		},
