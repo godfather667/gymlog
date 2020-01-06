@@ -144,18 +144,13 @@ func BuildRecord() (dataRecord string) {
 		codeRecord += " , " + result[0] + " "
 		codeRecord += strconv.Itoa(c) + " "
 		codeRecord += strconv.Itoa(r) + " "
-		fmt.Println("C = ", c, "  R = ", r, "  W = ", w)
 		if w == 0 {
-			fmt.Println("w = ", w)
 			codeRecord += strconv.Itoa(r)
-			fmt.Println("R = ", r)
 		} else {
 			codeRecord += strconv.Itoa(w)
 		}
 	}
-	//	codeRecord = codeRecord[:len(codeRecord)-1]
 	codeRecord += "\n;"
-	fmt.Println("Data Record = ", codeRecord)
 	return codeRecord
 }
 

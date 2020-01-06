@@ -116,10 +116,9 @@ func main() {
 				newDat := string(fileOps.ReadData(dataStore.Name(DATA)))
 
 				lines := strings.Split(newDat, ";")
-				fmt.Println("Lines ", lines[0])
 
-				ex := strings.Split(lines[0], ",")
-				fmt.Println("ex = ", ex)
+				//				ex := strings.Split(lines[0], ",")
+				//				fmt.Println("ex = ", ex)
 				//				date := dateOps.ConvertDate(ex[0])
 				//				t := builder.BuildTitle(ex, date)
 				for _, v := range lines {

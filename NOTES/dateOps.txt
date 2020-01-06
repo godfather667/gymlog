@@ -1,5 +1,0 @@
-dateOps Functions
-===================
-func DisplayDate() (curDate string) {
-
-func PageDate() (result string) {
