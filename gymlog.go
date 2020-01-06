@@ -12,6 +12,7 @@ import (
 
 	"gym_project/gymlog/builder"
 	"gym_project/gymlog/dataStore"
+	"gym_project/gymlog/dateOps"
 	"gym_project/gymlog/fileOps"
 
 	"github.com/urfave/cli"
@@ -47,6 +48,9 @@ const (
 
 func main() {
 
+	dateOps.DateStart(0, 0, 0)
+	dateOps.DateEnd(0, 0, 0)
+
 	//
 	// CLI Front End
 	//
@@ -69,8 +73,8 @@ func main() {
 			Usage:   "  Store Page in Database: (Database Format)\n",
 			Action: func(c *cli.Context) error {
 				mapD := builder.BuildRecord()
-				b := []byte(mapD)
-				fileOps.WriteAppend(dataStore.Name(DATA), b)
+				//				b := []byte(mapD)
+				fileOps.WriteAppend(dataStore.Name(DATA), []byte(mapD))
 				return nil
 			},
 		},
@@ -79,7 +83,8 @@ func main() {
 			Aliases: []string{"l"},
 			Usage:   "  List Contents of Database by range:\n              list mm dd yyyy mm dd yyyy -No dates = all dates, otherwise range is processed\n",
 			Action: func(c *cli.Context) error {
-				newDat := string(fileOps.ReadData(dataStore.Name(DATA)))
+				dateOps.LoadCmdDate(c)
+				newDat := fileOps.LoadDatabase(dataStore.Name(DATA))
 
 				lines := strings.Split(newDat, ";")
 				for i, v := range lines {
@@ -111,16 +116,11 @@ func main() {
 			Usage:   "Produces Progress Chart:\n              chart mm dd yyyy mm dd yyyy -No dates = all dates, otherwise range is processed\n",
 			Action: func(c *cli.Context) error {
 				fmt.Println("\n")
-				builder.BuildChart()
+				dateOps.LoadCmdDate(c)
 
-				newDat := string(fileOps.ReadData(dataStore.Name(DATA)))
-
+				newDat := fileOps.LoadDatabase(dataStore.Name(DATA))
 				lines := strings.Split(newDat, ";")
 
-				//				ex := strings.Split(lines[0], ",")
-				//				fmt.Println("ex = ", ex)
-				//				date := dateOps.ConvertDate(ex[0])
-				//				t := builder.BuildTitle(ex, date)
 				for _, v := range lines {
 					if newLine, ok := builder.BuildLine(v); ok {
 						fmt.Println(newLine)

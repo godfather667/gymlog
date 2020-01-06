@@ -2,8 +2,8 @@ package fileOps
 
 import (
 	"bufio"
-	"encoding/json"
 	"fmt"
+	"gym_project/gymlog/dateOps"
 	"io/ioutil"
 	"log"
 	"os"
@@ -73,58 +73,19 @@ func WriteAppend(dataFile string, data []byte) {
 	datawriter.Flush()
 }
 
-func storeDatabase(db interface{}, file string) {
-	js := ToJson(db) //Marshal
-	err := ioutil.WriteFile(file, js, 0644)
-	check(err)
-}
-
-func loadDatabase(dataFile string) []string {
-	ldb, err := ioutil.ReadFile(dataFile)
-	if err != nil { // Assume No File Present
-		storeDatabase("", "test")
-		ldb, err = ioutil.ReadFile(dataFile)
-		check(err)
+func LoadDatabase(file string) (db string) {
+	db = ""
+	mm, dd, yy := 0, 0, 0
+	data := string(ReadData(file))
+	lines := strings.Split(data, ";")
+	for _, v := range lines {
+		item := strings.Split(v, ",")
+		if len(item) > 1 {
+			mm, dd, yy = dateOps.BreakDate(item[0])
+			if dateOps.InRange(mm, dd, yy) {
+				db += v + ";"
+			}
+		}
 	}
-	check(err)
-	s := string(ldb)
-	s = strings.Replace(s, ",,", ",", -1)
-	db := strings.Split(s, "\n")
-	odb := make([]string, 1)
-	for i, v := range db {
-		fmt.Println("[", i, "]  ", v)
-	}
-	return odb
-}
-
-//
-// Json Fuctions for MarshalIndent, Marshal Unmarshal
-//
-func ToJsonIndent(i interface{}) []byte {
-	data, err := json.MarshalIndent(i, "", "   ")
-	if err != nil {
-		panic(err)
-	}
-
-	return data
-
-}
-
-func ToJson(i interface{}) []byte {
-	data, err := json.Marshal(i)
-	if err != nil {
-		panic(err)
-	}
-	return data
-
-}
-
-func FromJson(v []byte, vv interface{}) {
-	json.Unmarshal(v, &vv)
-}
-
-func LoadDatabase(file string) (db []string) {
-	data := ReadFile(file)
-	//	fmt.Println(data)
-	return data
+	return db
 }

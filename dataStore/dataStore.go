@@ -18,6 +18,7 @@ const (
 	DATA
 	PAGE
 	LIST
+	DATE
 )
 
 //
@@ -33,6 +34,7 @@ var initFile string = "gymlog.ini"
 var dataFile string = "dataFile"
 var pageFile string = "pageFile.txt"
 var listFile string = "listFile.txt"
+var forceDate string = ""
 
 func Name(d MyDt) string {
 	switch d {
@@ -44,6 +46,8 @@ func Name(d MyDt) string {
 		return pageFile
 	case LIST:
 		return listFile
+	case DATE:
+		return forceDate
 	default:
 		fmt.Println("Error: Filetype Unknown: Allowed: INIT, DATA, PAGE, LIST")
 		return ""
@@ -63,6 +67,9 @@ func SetName(d MyDt, n string) bool {
 		return true
 	case LIST:
 		listFile = n
+		return true
+	case DATE:
+		forceDate = n
 		return true
 	default:
 		fmt.Println("Error: Filetype Unknown: Allowed: DATA, PAGE, LIST")

@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"gym_project/gymlog/dataStore"
 	"gym_project/gymlog/dateOps"
-	"gym_project/gymlog/extract"
 	"gym_project/gymlog/fileOps"
 
 	"strconv"
@@ -25,6 +24,7 @@ const (
 	DATA
 	PAGE
 	LIST
+	DATE
 )
 
 func pad(frag string, width int) (cnt int) {
@@ -41,33 +41,6 @@ func fix(in string, fixLen int, suf string) (fix string) {
 	}
 	fix += "|"
 	return fix
-}
-
-func BreakEx(ex string) (cycle, reps, weight int) {
-	cycle, err := strconv.Atoi(extract.Between(ex, "(", "x"))
-	if err != nil {
-		fmt.Println("Malformed exercise specification:  example: (4x10@30) Acutal: ", ex)
-		return 0, 0, 0
-	}
-	reps, err = strconv.Atoi(extract.Between(ex, "x", ")"))
-	if err == nil {
-		return cycle, reps, 0 // Form = "(5X200)
-	} else {
-		if err != nil {
-			reps, err = strconv.Atoi(extract.Between(ex, "x", "@"))
-			if err != nil {
-				fmt.Println("Malformed exercise specification:  example: (4x10@30) Acutal: ", ex)
-				return 0, 0, 0
-			}
-			weight, err = strconv.Atoi(extract.Between(ex, "@", ")"))
-			if err != nil {
-				fmt.Println("Malformed exercise specification:  example: (4x10@30) Acutal: ", ex)
-				return 0, 0, 0
-			}
-		}
-	}
-
-	return cycle, reps, weight
 }
 
 func BuildPage(title bool) []string {
@@ -134,9 +107,9 @@ func BuildRecord() (dataRecord string) {
 			fmt.Println("Malformed Record: Improper number of Fields!  Fields = ", len(result))
 			continue
 		}
-		c, r, w := BreakEx(result[2])
+		c, r, w := dateOps.BreakDate(result[2])
 		if len(result) == 4 {
-			c3, r3, w3 := BreakEx(result[3])
+			c3, r3, w3 := dateOps.BreakDate(result[3])
 			if c3 > c {
 				c, r, w = c3, r3, w3
 			}

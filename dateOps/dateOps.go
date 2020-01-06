@@ -32,28 +32,26 @@ func DateEnd(mm, dd, yy int) bool {
 	return false
 }
 
-func getDateStart() (r bool, mm, dd, yy int) {
-	if Validate(mm, dd, yy) {
-		mm = mm_s
-		dd = dd_s
-		yy = yy_s
-		return true, mm, dd, yy
+func GetDateStart() (r bool, mm, dd, yy int) {
+	mm = mm_s
+	dd = dd_s
+	yy = yy_s
+	if mm == 0 || dd == 0 || yy == 0 {
+		return false, mm, dd, yy
 	}
-	return false, 0, 0, 0
+	return true, mm, dd, yy
 }
-func getDateEnd() (r bool, mm, dd, yy int) {
-	if Validate(mm, dd, yy) {
-		mm = mm_e
-		dd = dd_e
-		yy = yy_e
-		return true, mm, dd, yy
+func GetDateEnd() (r bool, mm, dd, yy int) {
+	mm = mm_e
+	dd = dd_e
+	yy = yy_e
+	if mm == 0 || dd == 0 || yy == 0 {
+		return false, mm, dd, yy
 	}
-	return false, 0, 0, 0
+	return true, mm, dd, yy
 }
 
 func LoadCmdDate(c *cli.Context) {
-	DateStart(0, 0, 0)
-	DateEnd(0, 0, 0)
 	if c.NArg() > 2 {
 		mm, _ := strconv.Atoi(c.Args().Get(0))
 		dd, _ := strconv.Atoi(c.Args().Get(1))
@@ -64,14 +62,15 @@ func LoadCmdDate(c *cli.Context) {
 		DateStart(mm, dd, yy)
 
 		if c.NArg() == 6 {
-			mm, _ := strconv.Atoi(c.Args().Get(0))
-			dd, _ := strconv.Atoi(c.Args().Get(1))
-			yy, _ := strconv.Atoi(c.Args().Get(2))
+			mm, _ := strconv.Atoi(c.Args().Get(3))
+			dd, _ := strconv.Atoi(c.Args().Get(4))
+			yy, _ := strconv.Atoi(c.Args().Get(5))
 			if Validate(mm, dd, yy) {
 				DateEnd(mm, dd, yy)
 			}
 		}
 	}
+
 	return
 }
 
@@ -84,6 +83,25 @@ func ConvertDate(dDate string) (oDate string) {
 	oDate = strings.Replace(oDate, "x", "/", 1)
 	oDate = strings.Replace(oDate, "@", "/", 1)
 	return oDate
+}
+
+func BreakDate(date string) (cycle, reps, weight int) {
+	date = strings.TrimLeft(date, "(")
+	date = strings.Trim(date, " )")
+	date = strings.Replace(date, "x", " ", 1)
+	date = strings.Replace(date, "@", " ", 1)
+	b := strings.Fields(date)
+	if len(b) == 2 {
+		b = append(b, "0")
+	}
+	m1, err1 := strconv.Atoi(b[0])
+	m2, err2 := strconv.Atoi(b[1])
+	m3, err3 := strconv.Atoi(b[2])
+	if err1 != nil || err2 != nil || err3 != nil {
+		fmt.Println("BreakDate Failure")
+	}
+	return m1, m2, m3
+
 }
 
 //
@@ -110,35 +128,29 @@ func InRange(mm, dd, yy int) bool {
 		fmt.Println("Validate Failed")
 		return false
 	}
-	input := fmt.Sprintf("%d-%02d-%02d", yy, mm, dd)
-	input += "T15:04:05.000-07:00"
-	t, _ := time.Parse("2006-01-02T15:04:05.000-07:00", input)
+	tm := time.Month(mm)
+	target := time.Date(yy, tm, dd, 0, 0, 0, 0, time.UTC)
 
-	var t_s time.Time
-	var t_e time.Time
-
-	if ret, s_yy, s_mm, s_dd := getDateStart(); ret {
-		input_s := fmt.Sprintf("%d-%02d-%02d", s_yy, s_mm, s_dd)
-		input_s += "T15:04:05.000-07:00"
-		t_s, _ = time.Parse("2006-01-02T15:04:05.000-07:00", input_s)
+	r, s_mm, s_dd, s_yy := GetDateStart()
+	if !r {
+		return true // No ranging possible!
 	}
 
-	if ret, e_yy, e_mm, e_dd := getDateEnd(); ret {
-		input_e := fmt.Sprintf("%d-%02d-%02d", e_yy, e_mm, e_dd)
-		input_e += "T15:04:05.000-07:00"
-		t_e, _ = time.Parse("2006-01-02T15:04:05.000-07:00", input_e)
-	}
-
-	fmt.Println("t = ", t, "  t_s = ", t_s, "  t_e", t_e)
-
-	if t.Before(t_s) {
-		fmt.Println("Date before Start!")
-		return false
-	}
-	if t.After(t_e) {
-		fmt.Println("Date After End!")
+	sm := time.Month(s_mm)
+	start := time.Date(s_yy, sm, s_dd, 0, 0, 0, 0, time.UTC)
+	if target.Before(start) {
 		return false
 	}
 
+	r, e_mm, e_dd, e_yy := GetDateEnd()
+	if !r {
+		return true // No End Date -
+	}
+
+	em := time.Month(e_mm)
+	end := time.Date(e_yy, em, e_dd, 0, 0, 0, 0, time.UTC)
+	if target.After(end) {
+		return false
+	}
 	return true
 }
