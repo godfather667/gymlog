@@ -8,6 +8,7 @@ import (
 
 	"strconv"
 	"strings"
+	"time"
 )
 
 //
@@ -15,6 +16,7 @@ import (
 //
 
 var Spacer string // Spacer Line for Chart
+var err error
 
 //
 // Constants
@@ -59,6 +61,10 @@ func fix(in string, fixLen int, suf string) (fix string) {
 
 func BuildPage(title bool) []string {
 	page := make([]string, 0)
+	t := time.Now()
+	if BuildDate() {
+		t = dataStore.Adate
+	}
 
 	if title {
 		page = append(page, "MON           WED             FRI")
@@ -68,7 +74,7 @@ func BuildPage(title bool) []string {
 	for _, v := range dataStore.LoadInit() {
 		str := ""
 		if strings.Contains(v, "MDY") {
-			v = fmt.Sprintln("MDY Create_Date ", dateOps.PageDate())
+			v = fmt.Sprintln("MDY Create_Date ", fmt.Sprintf("(%dx%d@%d)", t.Month(), t.Day(), t.Year()))
 		}
 
 		result := strings.Fields(v)
@@ -105,7 +111,11 @@ func BuildPage(title bool) []string {
 
 func BuildRecord() (dataRecord string) {
 	page := BuildPage(false)
-	date := dateOps.PageDate()
+	t := time.Now()
+	if BuildDate() {
+		t = dataStore.Adate
+	}
+	date := fmt.Sprintf("(%dx%d@%d)", t.Month(), t.Day(), t.Year())
 	codeRecord := date + "  "
 
 	for _, v := range page {
@@ -113,7 +123,6 @@ func BuildRecord() (dataRecord string) {
 			continue
 		}
 		if strings.Contains(v, "MDY") {
-			//			date := dateOps.DisplayDate()
 			continue
 		}
 
@@ -174,8 +183,6 @@ func RebuildDatabase(rn int) {
 func BuildTitle(ex []string, date string) (title []string) {
 	title = make([]string, 2)
 	title[0] += "Rec Date  |"
-	//	v := ex[0]
-	//	y := strings.Split(v, ",")
 
 	for i, x := range dataStore.CodeList {
 		if i == 0 {
@@ -231,4 +238,44 @@ func BuildChart() {
 	fmt.Println(title[1])
 
 	return
+}
+
+func BuildDate() bool {
+	var mm, dd, yy = 0, 0, 0
+	result := fileOps.Console("\n  Specify Different Date(Y/n)? ")
+	//				result = strings.ToLower(result)
+	if strings.ContainsAny(result, "Nn") {
+		dataStore.AskDate = false
+		fmt.Println("\n  Using Current Date\n")
+		return false
+	}
+
+	if strings.ContainsAny(result, "Yy") {
+		mm, err = strconv.Atoi(strings.TrimSpace(fileOps.Console("\n  Month = ")))
+		if err != nil {
+			fmt.Println("  Numeric Conversion Failed!")
+		} else {
+			dd, err = strconv.Atoi(strings.TrimSpace(fileOps.Console("\n  Day = ")))
+			if err != nil {
+				fmt.Println("  Numeric Conversion Failed!")
+			} else {
+				yy, err = strconv.Atoi(strings.TrimSpace(fileOps.Console("\n  Year = ")))
+				if err != nil {
+					fmt.Println("  Numeric Conversion Failed!")
+				}
+			}
+		}
+		if err == nil {
+			if !dateOps.Validate(mm, dd, yy) {
+				fmt.Println("Validate Failed")
+				fmt.Println("\n  Using Current Date\n")
+				return false
+			}
+			tm := time.Month(mm)
+			dataStore.Adate = time.Date(yy, tm, dd, 0, 0, 0, 0, time.UTC)
+			dataStore.AskDate = true
+			return true
+		}
+	}
+	return false
 }

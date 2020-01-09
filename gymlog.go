@@ -38,6 +38,8 @@ const (
 	LIST
 )
 
+var err error
+
 //
 // Helper Function
 //
