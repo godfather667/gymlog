@@ -111,10 +111,7 @@ func BuildPage(title bool) []string {
 
 func BuildRecord() (dataRecord string) {
 	page := BuildPage(false)
-	t := time.Now()
-	if BuildDate() {
-		t = dataStore.Adate
-	}
+	t := dataStore.Adate
 	date := fmt.Sprintf("(%dx%d@%d)", t.Month(), t.Day(), t.Year())
 	codeRecord := date + "  "
 

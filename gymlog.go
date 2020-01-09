@@ -76,7 +76,6 @@ func main() {
 			Usage:   "  Store Page in Database: (Database Format)\n",
 			Action: func(c *cli.Context) error {
 				mapD := builder.BuildRecord()
-				//				b := []byte(mapD)
 				fileOps.WriteAppend(dataStore.Name(DATA), []byte(mapD))
 				return nil
 			},
