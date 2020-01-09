@@ -27,6 +27,20 @@ const (
 	DATE
 )
 
+func LoadCodes() {
+	codes := make([]string, 0)
+
+	for _, v := range dataStore.LoadInit() {
+		result := strings.Fields(v)
+		if len(v) < 2 {
+			continue
+		}
+		codes = append(codes, result[0])
+	}
+	dataStore.CodeList = codes
+	return
+}
+
 func pad(frag string, width int) (cnt int) {
 	l := len(frag)
 	cnt = width - l
@@ -63,6 +77,7 @@ func BuildPage(title bool) []string {
 		}
 		str = ""
 		str = str + result[0]
+
 		for i := 0; i < pad(result[0], 4); i++ {
 			if len(result[0]) > 2 {
 				str = str + "   "
@@ -159,12 +174,14 @@ func RebuildDatabase(rn int) {
 func BuildTitle(ex []string, date string) (title []string) {
 	title = make([]string, 2)
 	title[0] += "Rec Date  |"
-	for i, v := range ex {
+	//	v := ex[0]
+	//	y := strings.Split(v, ",")
+
+	for i, x := range dataStore.CodeList {
 		if i == 0 {
 			continue
 		}
-		y := strings.Fields(v)
-		title[0] += fix(y[0], 4, "|")
+		title[0] += fix(x, 4, "|")
 	}
 
 	title[1] += "----------|"

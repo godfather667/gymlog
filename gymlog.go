@@ -51,6 +51,7 @@ func main() {
 	dateOps.DateStart(0, 0, 0)
 	dateOps.DateEnd(0, 0, 0)
 
+	builder.LoadCodes() // Load Excerise Codes
 	//
 	// CLI Front End
 	//
@@ -120,6 +121,11 @@ func main() {
 
 				newDat := fileOps.LoadDatabase(dataStore.Name(DATA))
 				lines := strings.Split(newDat, ";")
+
+				title := builder.BuildTitle(lines, dateOps.PageDate())
+
+				fmt.Println(title[0])
+				fmt.Println(title[1])
 
 				for _, v := range lines {
 					if newLine, ok := builder.BuildLine(v); ok {

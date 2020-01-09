@@ -28,6 +28,7 @@ const (
 var dataDB dataRecord
 
 var Store map[string][]string
+
 var CodeList []string
 
 var initFile string = "gymlog.ini"
@@ -75,31 +76,6 @@ func SetName(d MyDt, n string) bool {
 		fmt.Println("Error: Filetype Unknown: Allowed: DATA, PAGE, LIST")
 		return false
 	}
-}
-
-func InitStore() {
-	Store = make(map[string][]string)
-	CodeList = make([]string, 1)
-}
-
-func SetEntry(code string, entry []string) {
-	Store[code] = entry
-}
-
-func Entry(code string) []string {
-	return Store[code]
-}
-
-func RemEntry(code string) {
-	delete(Store, code)
-}
-
-func Codes() []string {
-	CodeList = nil
-	for c, _ := range Store {
-		CodeList = append(CodeList, c)
-	}
-	return CodeList
 }
 
 func LoadInit() (elst []string) {

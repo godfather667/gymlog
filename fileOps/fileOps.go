@@ -19,12 +19,6 @@ func check(e error) {
 	}
 }
 
-func PrintItem(item []string) {
-	for i, v := range item {
-		fmt.Println("[", i, "] ", v)
-	}
-}
-
 func Console(line string) (response string) {
 	reader := bufio.NewReader(os.Stdin)
 	fmt.Print(line)
@@ -87,5 +81,6 @@ func LoadDatabase(file string) (db string) {
 			}
 		}
 	}
+	db = db[:len(db)-1]
 	return db
 }
