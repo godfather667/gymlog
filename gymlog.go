@@ -124,7 +124,6 @@ func main() {
 				lines := strings.Split(newDat, ";")
 
 				title := builder.BuildTitle(lines, dateOps.PageDate())
-
 				fmt.Println(title[0])
 				fmt.Println(title[1])
 
