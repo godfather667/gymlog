@@ -66,7 +66,18 @@ func main() {
 			Usage:   "  Prints Page for Log Book: (Formats gymlog.ini for Log Book)\n",
 			Action: func(c *cli.Context) error {
 				page := builder.BuildPage(true)
-				fileOps.WriteFile("pageFile.txt", page)
+				file := ""
+				resp := fileOps.Console("New File Name (Return PageFile.txt): ")
+				if len(resp) < 3 {
+					file = dataStore.Name(PAGE)
+				} else {
+					file = strings.TrimSpace(resp)
+				}
+				fmt.Println("\nFile = ", file)
+				fileOps.WriteFile(file, page)
+				for _, v := range page {
+					fmt.Println(v)
+				}
 				return nil
 			},
 		},
