@@ -117,6 +117,7 @@ func main() {
 			Aliases: []string{"c"},
 			Usage:   "Produces Progress Chart:\n              chart mm dd yyyy mm dd yyyy -No dates = all dates, otherwise range is processed\n",
 			Action: func(c *cli.Context) error {
+				prevLine := ""
 				fmt.Println("\n")
 				dateOps.LoadCmdDate(c)
 
@@ -129,8 +130,11 @@ func main() {
 
 				for _, v := range lines {
 					if newLine, ok := builder.BuildLine(v); ok {
-						fmt.Println(newLine)
-						fmt.Println(builder.Spacer)
+						if newLine != prevLine {
+							fmt.Println(newLine)
+							fmt.Println(builder.Spacer)
+							prevLine = newLine
+						}
 					}
 				}
 				return nil
