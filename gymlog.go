@@ -36,6 +36,7 @@ const (
 	DATA
 	PAGE
 	LIST
+	CHART
 )
 
 var err error
@@ -128,6 +129,7 @@ func main() {
 			Aliases: []string{"c"},
 			Usage:   "Produces Progress Chart:\n              chart mm dd yyyy mm dd yyyy -No dates = all dates, otherwise range is processed\n",
 			Action: func(c *cli.Context) error {
+				store := make([]string, 0)
 				prevLine := ""
 				fmt.Println("\n")
 				dateOps.LoadCmdDate(c)
@@ -138,16 +140,21 @@ func main() {
 				title := builder.BuildTitle(lines, dateOps.PageDate())
 				fmt.Println(title[0])
 				fmt.Println(title[1])
+				store = append(store, title[0])
+				store = append(store, title[1])
 
 				for _, v := range lines {
 					if newLine, ok := builder.BuildLine(v); ok {
 						if newLine != prevLine {
 							fmt.Println(newLine)
 							fmt.Println(builder.Spacer)
+							store = append(store, newLine)
+							store = append(store, builder.Spacer)
 							prevLine = newLine
 						}
 					}
 				}
+				fileOps.WriteFile(dataStore.Name(CHART), store)
 				return nil
 			},
 		},

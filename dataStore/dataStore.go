@@ -19,6 +19,7 @@ const (
 	DATA
 	PAGE
 	LIST
+	CHART
 )
 
 //
@@ -35,6 +36,7 @@ var initFile string = "gymlog.ini"
 var dataFile string = "dataFile"
 var pageFile string = "pageFile.txt"
 var listFile string = "listFile.txt"
+var chartFile string = "chartFile.txt"
 
 func Name(d MyDt) string {
 	switch d {
@@ -46,6 +48,8 @@ func Name(d MyDt) string {
 		return pageFile
 	case LIST:
 		return listFile
+	case CHART:
+		return chartFile
 	default:
 		fmt.Println("Error: Filetype Unknown: Allowed: INIT, DATA, PAGE, LIST")
 		return ""
@@ -65,6 +69,9 @@ func SetName(d MyDt, n string) bool {
 		return true
 	case LIST:
 		listFile = n
+		return true
+	case CHART:
+		chartFile = n
 		return true
 	default:
 		fmt.Println("Error: Filetype Unknown: Allowed: DATA, PAGE, LIST")
@@ -87,6 +94,10 @@ func LoadInit() (elst []string) {
 		}
 		if strings.HasPrefix(line, "LIST ") {
 			listFile = strings.TrimLeft(line, "#LIST ")
+			continue
+		}
+		if strings.HasPrefix(line, "CHART ") {
+			chartFile = strings.TrimLeft(line, "#CHART ")
 			continue
 		}
 		comment := strings.HasPrefix(line, "#") || strings.HasPrefix(line, " #")

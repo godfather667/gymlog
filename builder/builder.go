@@ -26,7 +26,7 @@ const (
 	DATA
 	PAGE
 	LIST
-	DATE
+	CHART
 )
 
 func LoadCodes() {
