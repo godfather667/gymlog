@@ -112,7 +112,7 @@ func main() {
 		{
 			Name:    "remove",
 			Aliases: []string{"r"},
-			Usage:   "Remove a record from Database:\n              Remove <record number> (see listing)\n",
+			Usage:   "Remove a record from Database:\n             Remove <record number> (see FULL Listing For Record Number!!)\n",
 			Action: func(c *cli.Context) error {
 				recNumber := c.Args().First()
 				rn, err := strconv.Atoi(recNumber)
