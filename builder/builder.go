@@ -189,7 +189,7 @@ func BuildTitle(ex []string, date string) (title []string) {
 	}
 
 	title[1] += "----------|"
-	for i := 1; i < len(ex); i++ {
+	for i := 1; i < len(dataStore.CodeList); i++ {
 		title[1] += "----|"
 	}
 	Spacer = title[1]
@@ -203,18 +203,28 @@ func BuildLine(line string) (newLine string, ok bool) {
 		return "", false
 	}
 	newLine = ""
-	for i, v := range item {
+	if nl := dateOps.ConvertDate(item[0]); len(nl) > 2 {
+		newLine = fix(nl, 10, "|")
+	}
+	for i, x := range dataStore.CodeList {
 		if i == 0 {
-			if nl := dateOps.ConvertDate(v); len(nl) > 2 {
-				newLine = fix(nl, 10, "|")
+			continue
+		}
+		mk := false
+		for _, z := range item {
+			y := strings.Fields(z)
+			if strings.Compare(y[0], x) == 0 {
+				if len(y) == 4 {
+					newLine += fix(y[3], 4, "|")
+				} else {
+					newLine += fix(y[2], 4, "|")
+				}
+				mk = true
+				break
 			}
-		} else {
-			y := strings.Fields(v)
-			if len(y) == 4 {
-				newLine += fix(y[3], 4, "|")
-			} else {
-				newLine += fix(y[2], 4, "|")
-			}
+		}
+		if !mk {
+			newLine += "    |"
 		}
 	}
 	if len(newLine) < 1 {
