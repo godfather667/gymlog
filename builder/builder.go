@@ -258,18 +258,23 @@ func BuildDate() bool {
 	}
 
 	if strings.ContainsAny(result, "Yy") {
-		mm, err = strconv.Atoi(strings.TrimSpace(fileOps.Console("\n  Month = ")))
-		if err != nil {
-			fmt.Println("  Numeric Conversion Failed!")
-		} else {
-			dd, err = strconv.Atoi(strings.TrimSpace(fileOps.Console("\n  Day = ")))
+		for {
+			mm, err = strconv.Atoi(strings.TrimSpace(fileOps.Console("\n  Month = ")))
 			if err != nil {
 				fmt.Println("  Numeric Conversion Failed!")
 			} else {
-				yy, err = strconv.Atoi(strings.TrimSpace(fileOps.Console("\n  Year = ")))
+				dd, err = strconv.Atoi(strings.TrimSpace(fileOps.Console("\n  Day = ")))
 				if err != nil {
 					fmt.Println("  Numeric Conversion Failed!")
+				} else {
+					yy, err = strconv.Atoi(strings.TrimSpace(fileOps.Console("\n  Year = ")))
+					if err != nil {
+						fmt.Println("  Numeric Conversion Failed!")
+					}
 				}
+			}
+			if err != nil {
+				continue
 			}
 		}
 		if err == nil {
