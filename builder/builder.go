@@ -275,6 +275,8 @@ func BuildDate() bool {
 			}
 			if err != nil {
 				continue
+			} else {
+				break
 			}
 		}
 		if err == nil {
