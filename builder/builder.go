@@ -77,6 +77,10 @@ func BuildPage(title bool) []string {
 			v = fmt.Sprintln("MDY Create_Date ", fmt.Sprintf("(%dx%d@%d)", t.Month(), t.Day(), t.Year()))
 		}
 
+		if strings.Contains(v, "(0x0@0)") {
+			continue
+		}
+
 		result := strings.Fields(v)
 		if len(v) < 2 {
 			continue
