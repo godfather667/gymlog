@@ -130,7 +130,7 @@ func main() {
 			Usage:   "Produces Progress Chart:\n              chart mm dd yyyy mm dd yyyy -No dates = all dates, otherwise range is processed\n",
 			Action: func(c *cli.Context) error {
 				store := make([]string, 0)
-				prevLine := ""
+				prevLine := "1/22/2020 |"
 				fmt.Println("\n")
 				dateOps.LoadCmdDate(c)
 
@@ -145,7 +145,7 @@ func main() {
 
 				for _, v := range lines {
 					if newLine, ok := builder.BuildLine(v); ok {
-						if newLine != prevLine {
+						if strings.Compare(newLine[10:], prevLine[10:]) != 0 {
 							fmt.Println(newLine)
 							fmt.Println(builder.Spacer)
 							store = append(store, newLine)
