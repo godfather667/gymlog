@@ -3,8 +3,10 @@ NOTES/dataStore.txt
 NOTES
 test.bin
 dataFile
-pageFile.txt 
+page*.txt 
 listFile.txt
 BACKUP
 gymlog.ini_master
+ci.txt
+
 

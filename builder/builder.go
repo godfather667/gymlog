@@ -126,7 +126,6 @@ func BuildRecord() (dataRecord string) {
 		if strings.Contains(v, "MDY") {
 			continue
 		}
-
 		result := strings.Fields(v)
 		if len(result) != 3 && len(result) != 4 {
 			fmt.Println("Malformed Record: Improper number of Fields!  Fields = ", len(result))
