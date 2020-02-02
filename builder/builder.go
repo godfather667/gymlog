@@ -14,7 +14,6 @@ import (
 //
 // Variables
 //
-
 var Spacer string // Spacer Line for Chart
 var err error
 
