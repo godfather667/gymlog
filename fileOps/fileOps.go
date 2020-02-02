@@ -2,13 +2,19 @@ package fileOps
 
 import (
 	"bufio"
+	"encoding/json"
 	"fmt"
 	"gym_project/gymlog/dateOps"
 	"io/ioutil"
 	"log"
 	"os"
 	"strings"
+	"time"
 )
+
+type D_date struct {
+	date time.Time `json: "date"`
+}
 
 //
 // Database File Functions
@@ -43,6 +49,26 @@ func ReadData(file string) []byte {
 func WriteData(file string, data []byte) {
 	err := ioutil.WriteFile(file, data, 0644)
 	check(err)
+}
+
+func JsonDateReader() (d_date time.Time) {
+
+	dateMemory := ReadData("./JsonDateMemory")
+	Ddate := &D_date{}
+
+	json.Unmarshal(dateMemory, &Ddate.date)
+	return Ddate.date
+}
+
+func JsonDateWriter(idate time.Time) {
+	Ddate := &D_date{}
+	Ddate.date = idate
+	memory, err := json.Marshal(Ddate.date)
+	if err != nil {
+		log.Fatal(err)
+	}
+	WriteData("./JsonDateMemory", memory)
+	return
 }
 
 func WriteFile(file string, data []string) {

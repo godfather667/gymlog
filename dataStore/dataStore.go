@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"gym_project/gymlog/fileOps"
 	"strings"
-	"time"
 )
 
 type Ftype int
@@ -28,8 +27,6 @@ const (
 
 var dataDB dataRecord
 
-var AskDate bool = false
-var Adate = time.Now()
 var CodeList []string
 
 var initFile string = "gymlog.ini"

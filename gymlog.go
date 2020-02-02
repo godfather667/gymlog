@@ -66,7 +66,7 @@ func main() {
 			Aliases: []string{"p"},
 			Usage:   "  Prints Page for Log Book: (Formats gymlog.ini for Log Book)\n",
 			Action: func(c *cli.Context) error {
-				page := builder.BuildPage(true)
+				page := builder.BuildPage(true, false)
 				file := ""
 				resp := fileOps.Console("New File Name (Return PageFile.txt): ")
 				if len(resp) < 3 {

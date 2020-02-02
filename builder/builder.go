@@ -59,13 +59,15 @@ func fix(in string, fixLen int, suf string) (fix string) {
 	return fix
 }
 
-func BuildPage(title bool) []string {
+func BuildPage(title, rec bool) []string {
 	page := make([]string, 0)
 	t := time.Now()
-	if BuildDate() {
-		t = dataStore.Adate
+	if nt, ok := BuildDate(); ok {
+		t = nt
 	}
-
+	if !rec {
+		fileOps.JsonDateWriter(t)
+	}
 	if title {
 		page = append(page, "MON           WED             FRI")
 		page = append(page, "==================================\n")
@@ -114,8 +116,8 @@ func BuildPage(title bool) []string {
 }
 
 func BuildRecord() (dataRecord string) {
-	page := BuildPage(false)
-	t := dataStore.Adate
+	page := BuildPage(false, true)
+	t := fileOps.JsonDateReader()
 	date := fmt.Sprintf("(%dx%d@%d)", t.Month(), t.Day(), t.Year())
 	codeRecord := date + "  "
 
@@ -250,49 +252,48 @@ func BuildChart() {
 	return
 }
 
-func BuildDate() bool {
+func BuildDate() (date time.Time, ok bool) {
 	var mm, dd, yy = 0, 0, 0
+	var err error
 	result := fileOps.Console("\n  Specify Different Date(Y/n)? ")
-	//				result = strings.ToLower(result)
 	if strings.ContainsAny(result, "Nn") {
-		dataStore.AskDate = false
-		fmt.Println("\n  Using Current Date\n")
-		return false
-	}
+		//		dataStore.AskDate = false
+		return time.Now(), false
+	} else {
 
-	if strings.ContainsAny(result, "Yy") {
-		for {
-			mm, err = strconv.Atoi(strings.TrimSpace(fileOps.Console("\n  Month = ")))
-			if err != nil {
-				fmt.Println("  Numeric Conversion Failed!")
-			} else {
-				dd, err = strconv.Atoi(strings.TrimSpace(fileOps.Console("\n  Day = ")))
+		if strings.ContainsAny(result, "Yy") {
+			for {
+				mm, err = strconv.Atoi(strings.TrimSpace(fileOps.Console("\n  Month = ")))
 				if err != nil {
 					fmt.Println("  Numeric Conversion Failed!")
 				} else {
-					yy, err = strconv.Atoi(strings.TrimSpace(fileOps.Console("\n  Year = ")))
+					dd, err = strconv.Atoi(strings.TrimSpace(fileOps.Console("\n  Day = ")))
 					if err != nil {
 						fmt.Println("  Numeric Conversion Failed!")
+					} else {
+						yy, err = strconv.Atoi(strings.TrimSpace(fileOps.Console("\n  Year = ")))
+						if err != nil {
+							fmt.Println("  Numeric Conversion Failed!")
+						}
 					}
 				}
+				if err != nil {
+					continue
+				} else {
+					break
+				}
 			}
-			if err != nil {
-				continue
-			} else {
-				break
+			if err == nil {
+				if !dateOps.Validate(mm, dd, yy) {
+					fmt.Println("Validate Failed")
+					fmt.Println("\n  Using Current Date\n")
+					return time.Now(), false
+				}
+				tm := time.Month(mm)
+				t := time.Date(yy, tm, dd, 0, 0, 0, 0, time.UTC)
+				return t, true
 			}
-		}
-		if err == nil {
-			if !dateOps.Validate(mm, dd, yy) {
-				fmt.Println("Validate Failed")
-				fmt.Println("\n  Using Current Date\n")
-				return false
-			}
-			tm := time.Month(mm)
-			dataStore.Adate = time.Date(yy, tm, dd, 0, 0, 0, 0, time.UTC)
-			dataStore.AskDate = true
-			return true
 		}
 	}
-	return false
+	return time.Now(), false
 }
